@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Nullable
 import java.security.AccessController.getContext
 import kotlin.properties.Delegates
 import android.R.attr.animation
+import android.R.attr.animation
+import android.util.Log
 
 
 /**
@@ -29,10 +31,10 @@ import android.R.attr.animation
 class InitCoopenView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
     var mBorderWidthArc:Int = 0
     var mBorderWidthSquare:Int = 0
-    var mCurrentRadian = 0 //当前位置圆弧扫过的地方
+    var mCurrentRadian = 0f //当前位置圆弧扫过的地方
     lateinit var rectFArc: RectF
     lateinit var rectFSquare: RectF
-    lateinit var valueAnimator: ValueAnimator
+    private val valueAnimator = ValueAnimator()
     private val mPaintArc  = Paint()
     private val mPaintSquare  = Paint()
     private val mDuration = 1500L
@@ -40,15 +42,14 @@ class InitCoopenView(context: Context?, attrs: AttributeSet?) : View(context, at
     init {
         initPaint(getContext())
         initRect()
-
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawColor(Color.WHITE)
+        canvas!!.drawColor(Color.WHITE)
         //画圆弧或者是矩形，根据基准矩形的的大小和位置确定内部元素的大小和位置
-        canvas?.drawArc(rectFArc,90f, mCurrentRadian.toFloat(),false, mPaintArc)
-        canvas?.drawRoundRect(rectFSquare, dpToPx(context,8f).toFloat(),dpToPx(context,8f).toFloat(), mPaintSquare)
+        canvas.drawArc(rectFArc,90f, 90f,false, mPaintArc)
+        canvas.drawRoundRect(rectFSquare, dpToPx(context,8f).toFloat(),dpToPx(context,8f).toFloat(), mPaintSquare)
     }
 
 
@@ -62,13 +63,22 @@ class InitCoopenView(context: Context?, attrs: AttributeSet?) : View(context, at
         valueAnimator.setFloatValues(270f)
         valueAnimator.duration = mDuration
         valueAnimator.interpolator = AccelerateDecelerateInterpolator()
-        valueAnimator.addUpdateListener {
-            mCurrentRadian = it.animatedValue as Int
+//        valueAnimator.addUpdateListener {
+//            mCurrentRadian = attr.animation.toFloat()
+//            mCurrentRadian = it.animatedValue as Float
+//            invalidate()
+//        }
+        valueAnimator.addUpdateListener{
+            mCurrentRadian = it.animatedValue as Float
             invalidate()
         }
         valueAnimator.start()
+
     }
 
+    fun startAnimation(){
+        startAnimationDraw()
+    }
 
     /**
      * 完成基准矩形的自定义
