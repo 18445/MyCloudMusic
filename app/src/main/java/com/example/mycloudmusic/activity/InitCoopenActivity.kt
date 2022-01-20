@@ -6,6 +6,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import android.view.View.LAYER_TYPE_SOFTWARE
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.animation.addListener
@@ -43,7 +45,7 @@ class InitCoopenActivity: BaseActivity() {
 //            延时加载图片
             Handler(Looper.getMainLooper()).postDelayed({
                 Glide.with(this@InitCoopenActivity)
-                    .load(R.drawable.ic_coopen_main).centerCrop()
+                    .load(R.drawable.ic_coopen_main2).centerCrop()
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .transition(DrawableTransitionOptions.withCrossFade())
@@ -56,7 +58,9 @@ class InitCoopenActivity: BaseActivity() {
         translationAnimator.duration = 1000L
         alphaAnimator.duration = 2500
         translationAnimator.doOnEnd {
+//            关闭硬件加速
 //            位移动画结束时开启下一个动画
+            mInitCoopenView.setLayerType(LAYER_TYPE_SOFTWARE, null)
             mInitCoopenView.startAnimation()
         }
         val set = AnimatorSet()

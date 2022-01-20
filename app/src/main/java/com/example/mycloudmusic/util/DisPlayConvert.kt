@@ -1,5 +1,6 @@
 package com.example.mycloudmusic.util
 import android.content.Context
+import java.security.AccessController.getContext
 
 /**
  * dp/px/sp之间转换的工具类
@@ -7,6 +8,11 @@ import android.content.Context
  *
  */
 
+
+ fun dipToPx(context: Context,dip: Float): Int {
+    val density:Float = context.resources.displayMetrics.density
+    return (dip * density + 0.5f * if (dip >= 0) 1 else -1).toInt()
+}
 
 /**
  * 将px转换为与之相等的dp

@@ -24,15 +24,23 @@ open class BaseActivity: AppCompatActivity() {
     var screenDendityDpi //屏幕密度
             = 0
 
+    override fun onStart() {
+        super.onStart()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         // 去掉标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE)
+        supportActionBar?.hide();
 
         //保持屏幕为横屏或者竖屏，禁止旋转
-        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT //竖屏
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
+        fun setOrientationPortrait(){
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT //竖屏
+        }
+        fun setOrientationLandscape(){
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;//横屏
+        }
 
-        //将Acitivity 中的Window 的背景图设置为空,解决Android Activity切换时出现白屏问题
+        //将Activity 中的Window 的背景图设置为空,解决Android Activity切换时出现白屏问题
         window.setBackgroundDrawable(null)
 
         //打印当前活动的activity
