@@ -1,9 +1,9 @@
 package com.example.mycloudmusic.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Adapter
+import android.widget.CheckBox
 import android.widget.Switch
 import android.widget.TableLayout
 import androidx.viewpager2.widget.ViewPager2
@@ -32,6 +32,14 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         initView()
         initPage()
+        initClick()
+    }
+
+    /**
+     * 初始化点击事件
+     */
+    private fun initClick(){
+
     }
 
     /**

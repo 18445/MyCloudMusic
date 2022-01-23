@@ -65,9 +65,9 @@ class InitCoopenView(context: Context?, attrs: AttributeSet?) : View(context, at
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas!!.drawColor(Color.BLACK)
-        Log.d("InitCoopenView", "onDrawBeCalled")
-        Log.d("RecFSquare",rectFSquare.toString())
-        Log.d("RecFArc",rectFArc.toString())
+//        Log.d("InitCoopenView", "onDrawBeCalled")
+//        Log.d("RecFSquare",rectFSquare.toString())
+//        Log.d("RecFArc",rectFArc.toString())
         //画圆弧或者是矩形，根据基准矩形的的大小和位置确定内部元素的大小和位置
         canvas.drawArc(rectFArc.right,rectFArc.bottom,rectFArc.left,rectFArc.top, 90f, mCurrentRadian, false , mPaintArc)
         //出于不知名的原因，该方法无效？？

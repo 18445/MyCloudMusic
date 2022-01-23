@@ -9,7 +9,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/img_login_top1"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_login_back"
@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintHorizontal_bias="0.081"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/img_login_top1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.615" />
 
@@ -44,6 +44,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
     <EditText
+        android:id="@+id/et_login_phone"
         android:layout_width="339dp"
         android:layout_height="61dp"
         android:layout_marginBottom="48dp"
