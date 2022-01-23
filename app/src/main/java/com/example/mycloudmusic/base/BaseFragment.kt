@@ -11,13 +11,14 @@ open class BaseFragment : Fragment() {
     //传递过来的参数Bundle，供子类使用
     private var args: Bundle? = null
 
+
     /**
      * 初始创建Fragment对象时调用
      * @param savedInstanceState
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        args = getArguments()
+        args = arguments
     }
 
     companion object {
