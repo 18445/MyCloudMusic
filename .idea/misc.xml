@@ -9,9 +9,11 @@
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_login_password.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_login_phone.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_coopen.xml" value="0.3515625" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_home.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_login.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_login.xml" value="0.32546296296296295" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_logincaptcha.xml" value="0.3125" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_loginemail.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_loginphone.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_loginphonepassword.xml" value="0.32546296296296295" />

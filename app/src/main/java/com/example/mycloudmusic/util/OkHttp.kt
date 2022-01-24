@@ -1,8 +1,15 @@
 package com.example.mycloudmusic.util
 
-import com.example.mycloudmusic.data.PostParamToValue
+
+import android.os.Message
 import okhttp3.*
 import okio.IOException
+import java.util.concurrent.TimeUnit
+
+
+private const val SUCCESS = 1000
+private const val FALL = 1001
+
 
 fun asyncGet(url : String,failConnect: () -> Unit, successConnect: (String)->Unit) {
     //创建request请求对象
@@ -26,11 +33,11 @@ fun asyncGet(url : String,failConnect: () -> Unit, successConnect: (String)->Uni
 }
 
 
-fun asyncPost(url:String, postParamToValues:MutableList<PostParamToValue>, failConnect: () -> Unit, successConnect: (String)->Unit) {
+fun asyncPost(url:String, map:MutableMap<String,String>, failConnect: () -> Unit, successConnect: (String)->Unit) {
     //添加post请求参数
     val requestBody = FormBody.Builder()
-    for (param in postParamToValues){
-        requestBody.add(param.url,param.value)
+    for (param in map){
+        requestBody.add(param.key,param.value)
     }
     val paramBody:FormBody = requestBody.build()
 
@@ -53,4 +60,46 @@ fun asyncPost(url:String, postParamToValues:MutableList<PostParamToValue>, failC
             }
         })
 }
+
+fun asyncPost(url:String, map:MutableMap<String,String>){
+
+
+
+    val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10,TimeUnit.SECONDS)
+        .writeTimeout(10,TimeUnit.SECONDS)
+        .build()
+
+    val requestBody = FormBody.Builder()
+    for (param in map){
+        requestBody.add(param.key,param.value)
+    }
+    val paramBody = requestBody.build()
+
+    val request = Request.Builder()
+        .post(paramBody)
+        .url(url)
+        .build()
+
+    val call = okHttpClient.newCall(request)
+
+
+
+    call.enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            TODO("something wrong")
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            val string: String = response.body!!.string()
+            val msg: Message = Message.obtain()
+            msg.obj = string
+            msg.what = SUCCESS
+        }
+    })
+
+
+}
+
 
