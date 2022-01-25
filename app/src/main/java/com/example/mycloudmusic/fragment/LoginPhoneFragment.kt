@@ -197,10 +197,11 @@ class LoginPhoneFragment : BaseFragment() {
                 Log.d(TAG, "$mData")
                 val mGson = Gson()
                 val mLoginVerification = mGson.fromJson(mData,LoginVerification::class.java)
+                //检查是否被注册过
                 if(mLoginVerification.exist == 1){
-                    loginIn()
+                    getUser()
                     activity?.runOnUiThread {
-                        successLogin(mData!!)
+                        loginSuccess()
                     }
                 }else{
                     activity?.runOnUiThread {
@@ -263,16 +264,17 @@ class LoginPhoneFragment : BaseFragment() {
     /**
      * 登录成功调用此方法
      */
-    private fun successLogin(mData:String){
+    private fun loginSuccess(){
         val intent = Intent(activity,HomeActivity::class.java)
         activity?.onBackPressed()
+        activity?.finish()
         startActivity(intent)
     }
+
     /**
      * 调用登录方法获得用户数据
      */
-
-    private fun loginIn(){
+    private fun getUser(){
         val requestBody = FormBody.Builder()
             .add("phone",mPhone)
             .add("password","")
