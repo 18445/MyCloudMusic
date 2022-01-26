@@ -16,7 +16,7 @@
         />
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tly2_login_bottom"
+        android:id="@+id/tly_login_bottom"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"

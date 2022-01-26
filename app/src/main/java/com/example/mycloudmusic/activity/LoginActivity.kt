@@ -2,10 +2,6 @@ package com.example.mycloudmusic.activity
 
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Adapter
-import android.widget.CheckBox
-import android.widget.Switch
-import android.widget.TableLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.adapter.ViewPagerAdapter
@@ -15,9 +11,7 @@ import com.example.mycloudmusic.fragment.LoginPhoneFragment
 import com.example.mycloudmusic.fragment.LoginPhonePasswordFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import androidx.annotation.NonNull
 import com.example.mycloudmusic.base.BaseActivity
-import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 
 
 class LoginActivity : BaseActivity() {
@@ -47,7 +41,7 @@ class LoginActivity : BaseActivity() {
      */
     private fun initView(){
         mViewPager2 = findViewById(R.id.vp2_login_top)
-        mTabLayout = findViewById(R.id.tly2_login_bottom)
+        mTabLayout = findViewById(R.id.tly_login_bottom)
     }
 
     /**
