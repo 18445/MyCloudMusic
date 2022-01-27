@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mycloudmusic.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
+import com.example.mycloudmusic.activity.MYUSER
 import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.data.LoginFailure
 import com.example.mycloudmusic.data.User
@@ -27,6 +28,8 @@ import java.util.concurrent.TimeUnit
 /**
  * 登录界面之手机-密码登录
  */
+
+
 class LoginPhonePasswordFragment : BaseFragment() {
     private lateinit var userModel : MyViewModel
     private lateinit var client: OkHttpClient
@@ -116,7 +119,7 @@ class LoginPhonePasswordFragment : BaseFragment() {
 
                 val mGson = Gson()
                 val loginInformation : LoginFailure = mGson.fromJson(string,LoginFailure::class.java)
-                //账务错误
+                //账户错误
                 if(loginInformation.code != 200){
                     Looper.prepare();
                     Toast.makeText(activity,loginInformation.msg,Toast.LENGTH_SHORT).show()
@@ -126,11 +129,8 @@ class LoginPhonePasswordFragment : BaseFragment() {
                     activity?.runOnUiThread {
                         loginSuccess()
                     }
-
                 }
-
             }
-
         })
     }
 
@@ -151,8 +151,9 @@ class LoginPhonePasswordFragment : BaseFragment() {
     private fun getUser(userData:String){
         Log.d(ContentValues.TAG, " onResponse: $userData")
         val mGson = Gson()
-        userModel.user = mGson.fromJson(userData, User::class.java)//更新ViewModel中User数据
-
+        val user:User = mGson.fromJson(userData, User::class.java)
+        Log.d("User:",user.toString())
+        MYUSER = user
     }
 
 }

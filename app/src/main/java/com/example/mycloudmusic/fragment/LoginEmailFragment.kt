@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mycloudmusic.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
+import com.example.mycloudmusic.activity.MYUSER
 import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.data.LoginFailure
 import com.example.mycloudmusic.data.UnInitUser
@@ -155,6 +156,6 @@ class LoginEmailFragment : BaseFragment(){
     private fun getUser(userData:String){
         Log.d(ContentValues.TAG, " onResponse: $userData")
         val mGson = Gson()
-        userModel.user = mGson.fromJson(userData, User::class.java)//更新ViewModel中User数据
+        MYUSER = (mGson.fromJson(userData, User::class.java))//更新ViewModel中User数据
     }
 }

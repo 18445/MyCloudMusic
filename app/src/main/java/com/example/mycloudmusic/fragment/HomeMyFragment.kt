@@ -44,16 +44,19 @@ class HomeMyFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initView()
+        initUser()
+        setListener()
         super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initView(){
+//        userModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         userModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         mIvBackground = requireView().findViewById(R.id.iv_home_background)
         mCollapsingToolbarLayout = requireView().findViewById(R.id.toolbar_home_top)
         mAppBarLayout = requireView().findViewById(R.id.appbar_home_top)
         mTabLayout = requireView().findViewById(R.id.tly_home_middle)
-        mViewPager2 = requireView().findViewById(R.id.tly_home_bottom)
+        mViewPager2 = requireView().findViewById(R.id.vp2_home_bottom)
         mUserNote = requireView().findViewById(R.id.tv_home_note)
         mUserNickname = requireView().findViewById(R.id.tv_home_nickname)
     }
@@ -62,9 +65,9 @@ class HomeMyFragment : BaseFragment() {
      * 初始化用户
      */
     private fun initUser(){
-        val follows = userModel.user.profile.follows
-        val followeds = userModel.user.profile.followeds
-        mUserNickname.text = userModel.user.profile.nickname
+        val follows = userModel.getUser().profile.follows
+        val followeds = userModel.getUser().profile.followeds
+        mUserNickname.text = userModel.getUser().profile.nickname
         mUserNote.text =" ${follows}关注 | ${followeds}粉丝"
     }
 
@@ -80,7 +83,7 @@ class HomeMyFragment : BaseFragment() {
                     scrollRange = appBarLayout.totalScrollRange
                 }
                 if (scrollRange + verticalOffset == 0) { //收缩时
-                    mCollapsingToolbarLayout.title = userModel.user.profile.nickname
+                    mCollapsingToolbarLayout.title = userModel.getUser().profile.nickname
                     isShow = true
                 } else if (isShow) { //展开时
                     mCollapsingToolbarLayout.title = ""

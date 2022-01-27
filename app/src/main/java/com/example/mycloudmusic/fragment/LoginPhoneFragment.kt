@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mycloudmusic.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
+import com.example.mycloudmusic.activity.MYUSER
 import com.example.mycloudmusic.data.LoginVerification
 import com.example.mycloudmusic.data.User
 import com.google.android.material.button.MaterialButton
@@ -298,7 +299,7 @@ class LoginPhoneFragment : BaseFragment() {
                 val userData = response.body?.string()
                 Log.d(TAG, " onResponse: $userData")
                 val mGson = Gson()
-                userModel.user = mGson.fromJson(userData,User::class.java)//更新ViewModel中User数据
+                MYUSER = (mGson.fromJson(userData,User::class.java)) //更新ViewModel中User数据
             }
         })
     }
