@@ -20,8 +20,8 @@ import com.example.mycloudmusic.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
 import com.example.mycloudmusic.activity.MYUSER
-import com.example.mycloudmusic.data.LoginVerification
-import com.example.mycloudmusic.data.User
+import com.example.mycloudmusic.userdata.LoginVerification
+import com.example.mycloudmusic.userdata.User
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import okhttp3.*

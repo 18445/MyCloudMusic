@@ -1,4 +1,4 @@
-package com.example.mycloudmusic.data
+package com.example.mycloudmusic.userdata
 
 /**
  * 网络请求返回的数据类型

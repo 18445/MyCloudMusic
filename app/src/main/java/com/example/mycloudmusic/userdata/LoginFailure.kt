@@ -1,4 +1,4 @@
-package com.example.mycloudmusic.data
+package com.example.mycloudmusic.userdata
 
 /**
  * 登录失败的数据

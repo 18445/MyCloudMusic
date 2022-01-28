@@ -1,4 +1,4 @@
-package com.example.mycloudmusic.data
+package com.example.mycloudmusic.userdata
 
 data class LoginVerification(
     val code: Int,

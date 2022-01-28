@@ -1,4 +1,9 @@
-package com.example.mycloudmusic.data class UnInitUser(
+package com.example.mycloudmusic.userdata
+
+/**
+ * 未初始化的用户类
+ */
+data class UnInitUser(
     val UnusedAccount: UnusedAccount,
     val bindings: List<Any>,
     val code: Int,
