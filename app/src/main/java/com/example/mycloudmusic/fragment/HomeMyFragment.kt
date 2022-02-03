@@ -1,26 +1,35 @@
 package com.example.mycloudmusic.fragment
 
+import GlideBlurTransformation
+import android.content.ContentValues
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.mycloudmusic.MyViewModel
-import com.example.mycloudmusic.R
 import com.example.mycloudmusic.base.BaseFragment
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-
+import com.example.mycloudmusic.userdata.UserLevelFault
+import com.example.mycloudmusic.userdata.UserPlaylist
 import com.google.android.material.tabs.TabLayout
-
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.gson.Gson
+import okhttp3.*
+import java.io.IOException
+import com.bumptech.glide.request.RequestOptions
+import com.example.mycloudmusic.R
+import com.example.mycloudmusic.adapter.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 /**
@@ -29,6 +38,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 class HomeMyFragment : BaseFragment() {
     private lateinit var mIvUser:ImageView
     private lateinit var mIvBackground: ImageView
+    private lateinit var mIvSexBackground:ImageView
     private lateinit var userModel : MyViewModel
     private lateinit var mUserNickname : TextView
     private lateinit var mUserNote : TextView
@@ -36,6 +46,11 @@ class HomeMyFragment : BaseFragment() {
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager2: ViewPager2
+    private val mFragments: List<BaseFragment> = listOf(
+        CreatedPlayerListFragment(),
+        CollectedPlayerListFragment(),
+        RecommendPlayerListFragment()
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,11 +64,13 @@ class HomeMyFragment : BaseFragment() {
         initView()
         initUser()
         setListener()
+        initPage()
         super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initView(){
         userModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        mIvSexBackground = requireView().findViewById(R.id.iv_home_sex)
         mIvBackground = requireView().findViewById(R.id.iv_home_background)
         mIvUser = requireView().findViewById(R.id.iv_home_user)
         mCollapsingToolbarLayout = requireView().findViewById(R.id.toolbar_home_top)
@@ -77,9 +94,30 @@ class HomeMyFragment : BaseFragment() {
         val mUrlBackground = userModel.getUser().profile.backgroundUrl
         //设置基本属性
         mUserNickname.text = userModel.getUser().profile.nickname
-        mUserNote.text =" ${follows}关注 | ${followeds}粉丝"
+        " ${follows}关注 | ${followeds}粉丝 | lv.${userModel.userLevel.data.level}".also { mUserNote.text = it }
         //设置头像和背景
         setUserIv(mUrlUser,mUrlBackground)
+        setMaleOfFeMale()
+
+    }
+
+    /**
+     * 判断性别属性
+     * 加载不同的性别图片
+     */
+    private fun setMaleOfFeMale(){
+        val isMale = (userModel.getUser().profile.gender)==1
+        if(isMale){
+            Glide.with(requireActivity())
+                .load(R.drawable.ic_sex_male)
+                .circleCrop()
+                .into(mIvSexBackground)
+        }else{
+            Glide.with(requireActivity())
+                .load(R.drawable.ic_sex_female)
+                .circleCrop()
+                .into(mIvSexBackground)
+        }
     }
 
     /**
@@ -92,11 +130,15 @@ class HomeMyFragment : BaseFragment() {
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(mIvUser)
 
-        Glide.with(requireActivity())
-            .load(BgUrl)
-            .circleCrop()
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(mIvBackground)
+        context?.let { GlideBlurTransformation(it) }//模拟图片处理
+            ?.let { RequestOptions.bitmapTransform(it) }?.let {
+                Glide.with(requireActivity())
+                .load(BgUrl)
+                .circleCrop()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .apply(it)
+                .into(mIvBackground)
+            }
     }
 
     /**
@@ -124,6 +166,21 @@ class HomeMyFragment : BaseFragment() {
         })
 
     }
+
+    /**
+     * 设置ViewPager2+TabLayout页面
+     */
+    private fun initPage(){
+        mViewPager2.adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle, mFragments)
+        TabLayoutMediator(mTabLayout, mViewPager2) { tab, position ->
+            when (position) {
+                0 -> tab.text = "创建歌单"
+                1 -> tab.text = "收藏歌单"
+                2 -> tab.text = "推荐歌单"
+            }
+        }.attach()
+    }
+
 
 }
 

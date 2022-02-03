@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.base.BaseFragment
 
-class HomeFindFragment : BaseFragment() {
+class CollectedPlayerListFragment : BaseFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_homefind, container, false)
+        return inflater.inflate(R.layout.fragment_collectedplayerlist, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

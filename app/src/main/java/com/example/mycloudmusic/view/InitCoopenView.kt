@@ -94,7 +94,7 @@ class InitCoopenView(context: Context?, attrs: AttributeSet?) : View(context, at
         valueAnimator.addUpdateListener {
             mCurrentRadian = it.animatedValue as Float
             invalidate()
-            Log.d("InitCoopenView", "mCurrentRadian:${mCurrentRadian}")
+//            Log.d("InitCoopenView", "mCurrentRadian:${mCurrentRadian}")
         }
         valueAnimator.start()
 

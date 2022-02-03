@@ -4,6 +4,11 @@ package com.example.mycloudmusic.util
 import android.os.Message
 import okhttp3.*
 import okio.IOException
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.lang.Exception
+import java.lang.StringBuilder
 import java.util.concurrent.TimeUnit
 
 
@@ -101,5 +106,27 @@ fun asyncPost(url:String, map:MutableMap<String,String>){
 
 
 }
+
+fun StreamToString(inStream: InputStream): String {
+    val sb = StringBuilder() //新建一个StringBuilder
+    var oneLine: String? //流转换为字符串的一行
+    val reader = BufferedReader(InputStreamReader(inStream)) //
+    try {
+        while (reader.readLine().also { oneLine = it } != null) { //readLine方法将读取一行
+            sb.append(oneLine) //拼接字符串
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    } finally {
+        try {
+            inStream.close() //关闭InputStream
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+    println("sb:$sb")
+    return sb.toString() //将拼接好的字符串返回出去
+}
+
 
 

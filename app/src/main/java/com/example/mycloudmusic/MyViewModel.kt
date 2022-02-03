@@ -14,8 +14,9 @@ class MyViewModel: ViewModel() {
         return user
     }
 
+//    var userPlaylist = mutableListOf<UserPlaylist>()
+    lateinit var userPlaylist : UserPlaylist
     lateinit var userLevel: UserLevel
-    lateinit var userPlaylist: UserPlaylist
     lateinit var recentSong: RecentSong
     lateinit var recentVideo: RecentVideo
     lateinit var userLikeList: UserLikeList
