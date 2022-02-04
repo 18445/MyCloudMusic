@@ -1,4 +1,6 @@
 package com.example.mycloudmusic.item
 
-
-data class PlayerListItem(val imageResource: String, val title: String, val content: String)
+/**
+ * RecycleView传入的歌单Item类
+ */
+data class PlayerListItem(val imageResource: String, val title: String, val content: String?)

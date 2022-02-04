@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.example.mycloudmusic.MyViewModel
+import com.example.mycloudmusic.viewmodel.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.adapter.ViewPagerAdapter
 import com.example.mycloudmusic.base.BaseActivity
@@ -15,7 +15,6 @@ import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.fragment.*
 import com.example.mycloudmusic.userdata.*
 import com.example.mycloudmusic.util.LoggingInterceptor
-import com.example.mycloudmusic.util.StreamToString
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
@@ -39,13 +38,6 @@ class HomeActivity : BaseActivity() {
         R.drawable.ic_home_follow,
         R.drawable.ic_home_village
     )
-    private lateinit var cookieList:List<String>
-    private lateinit var mTabLayout: TabLayout
-    private lateinit var mViewPager2: ViewPager2
-    private lateinit var user: User
-    private lateinit var userModel: MyViewModel
-    private lateinit var client: OkHttpClient
-    private lateinit var builder: OkHttpClient.Builder
     private val mFragments: List<BaseFragment> = listOf(
         HomeFindFragment(),
         HomePodcastFragment(),
@@ -53,24 +45,32 @@ class HomeActivity : BaseActivity() {
         HomeFollowFragment(),
         HomeVillageFragment()
     )
+    private lateinit var cookieList:List<String>
+    private lateinit var mTabLayout: TabLayout
+    private lateinit var mViewPager2: ViewPager2
+    private lateinit var user: User
+    private lateinit var userModel: MyViewModel
+    private lateinit var client: OkHttpClient
+    private lateinit var builder: OkHttpClient.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_home)
-//        initCookie()
         initNet()
         initUser(MYUSER)
         initView()
         initPage()
-        //网络请求部分
+//
+//        initCookie()
+//        网络请求部分
         initUserLevel()
         initPlayerList()
-        initUserLikeList()
-        initRecentSong()
-        initRecentVideo()
-        initPersonalizeList()
-        initPersonalizeSong()
+//        initUserLikeList()
+//        initRecentSong()
+//        initRecentVideo()
+//        initPersonalizeList()
+//        initPersonalizeSong()
         initRecommendList()
-        initRecommendSong()
+//        initRecommendSong()
         super.onCreate(savedInstanceState)
     }
 
@@ -146,27 +146,33 @@ class HomeActivity : BaseActivity() {
         val request = Request.Builder()
             .url("https://netease-cloud-music-api-18445.vercel.app/user/level")
                 //添加Cookie操作
+//            .apply {
+//                val length = cookieList.count()
+//                Log.d("cookie",cookieList.toString())
+//                Log.d("cookie","cookie length = $length")
+//                for(i in 0..85 step 5){
+//                    Log.d("cookie {$i:}", cookieList[i])
+//                    Log.d("cookie {${i+1}:}", cookieList[i+1])
+//                    Log.d("cookie {${i+2}:}", cookieList[i+2])
+//                    Log.d("cookie {${i+3}:}", cookieList[i+3])
+//                    Log.d("cookie {${i+4}:}", cookieList[i+4])
+//                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+//                    Log.d("cookie {$i:}", cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+//                }
+//                for(i in 94..length-5 step 5 ){
+//                    Log.d("cookie {$i:}", cookieList[i])
+//                    Log.d("cookie {${i+1}:}", cookieList[i+1])
+//                    Log.d("cookie {${i+2}:}", cookieList[i+2])
+//                    Log.d("cookie {${i+3}:}", cookieList[i+3])
+//                    Log.d("cookie {${i+4}:}", cookieList[i+4])
+//                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+//                    Log.d("cookie {$i:}", cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+//                }
+//            }
             .apply {
                 val length = cookieList.count()
-                Log.d("cookie",cookieList.toString())
-                Log.d("cookie","cookie length = $length")
-                for(i in 0..85 step 5){
-                    Log.d("cookie {$i:}", cookieList[i])
-                    Log.d("cookie {${i+1}:}", cookieList[i+1])
-                    Log.d("cookie {${i+2}:}", cookieList[i+2])
-                    Log.d("cookie {${i+3}:}", cookieList[i+3])
-                    Log.d("cookie {${i+4}:}", cookieList[i+4])
+                for(i in 0..length-5 step 1){
                     addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
-                    Log.d("cookie {$i:}", cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
-                }
-                for(i in 94..length-5 step 5 ){
-                    Log.d("cookie {$i:}", cookieList[i])
-                    Log.d("cookie {${i+1}:}", cookieList[i+1])
-                    Log.d("cookie {${i+2}:}", cookieList[i+2])
-                    Log.d("cookie {${i+3}:}", cookieList[i+3])
-                    Log.d("cookie {${i+4}:}", cookieList[i+4])
-                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
-                    Log.d("cookie {$i:}", cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
                 }
             }
                 //效果如下：(出于不知名的原因？ 无法直接将Cookie字符串加入head之中，需要将cookie手动分部加入QAQ)
@@ -237,15 +243,6 @@ class HomeActivity : BaseActivity() {
 
         val request = Request.Builder()
             .url("https://netease-cloud-music-api-18445.vercel.app/user/playlist")
-//            .apply {
-//                val length = cookieList.count()
-//                for(i in 0..85 step 5){
-//                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
-//                }
-//                for(i in 94..length-5 step 5 ){
-//                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
-//                }
-//            }
             .apply {
                 val length = cookieList.count()
 //                for(i in 0..60 step 5){
@@ -284,6 +281,7 @@ class HomeActivity : BaseActivity() {
 //                    userModel.userPlaylist.add(userPlaylist)
 //                    userModel.userPlaylist= mGson.fromJson(userData, UserPlaylist::class.java)
                     val userPlaylist= mGson.fromJson(userData, UserPlaylist::class.java)
+                    userModel.userPlaylist = userPlaylist
                     Log.d("vvv",userPlaylist.toString())
 //                }
             }
@@ -576,8 +574,13 @@ class HomeActivity : BaseActivity() {
     private fun initRecommendList(  ){
 
         val request = Request.Builder()
-            .url("https://netease-cloud-music-api-18445.vercel.app/comment/music")
-            .header("Cookie", userModel.getUser().cookie.trim())
+            .url("https://netease-cloud-music-api-18445.vercel.app/recommend/resource")
+            .apply {
+                val length = cookieList.count()
+                for(i in 0..length-5 step 1){
+                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+                }
+            }
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -588,7 +591,7 @@ class HomeActivity : BaseActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 val userData = response.body?.string()
-                Log.d(ContentValues.TAG, " onResponse: $userData")
+                Log.d(ContentValues.TAG, " onResponseRecommendList: $userData")
                 val mGson = Gson()
                 val mUserLevelInformation = mGson.fromJson(userData, UserLevelFault::class.java)
 

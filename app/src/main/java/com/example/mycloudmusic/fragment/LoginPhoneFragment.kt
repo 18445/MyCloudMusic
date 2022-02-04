@@ -16,7 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.mycloudmusic.MyViewModel
+import com.example.mycloudmusic.viewmodel.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
 import com.example.mycloudmusic.activity.MYUSER
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit
  * 登录界面之手机登录
  */
 class LoginPhoneFragment : BaseFragment() {
-    private lateinit var userModel :MyViewModel
+    private lateinit var userModel : MyViewModel
     private lateinit var client: OkHttpClient
     private lateinit var builder: OkHttpClient.Builder
     private lateinit var mImageView: ImageView

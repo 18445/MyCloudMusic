@@ -14,17 +14,17 @@ data class Recommend(
     val alg: String,
     val copywriter: String,
     val createTime: Long,
-    val creator: CreatorComment,
-    val id: Long,
+    val creator: CreatorCommend,
+    val id: String,
     val name: String,
     val picUrl: String,
     val playcount: Long,
     val trackCount: Int,
     val type: Int,
-    val userId: Int
+    val userId: String
 )
 
-data class CreatorComment(
+data class CreatorCommend(
     val accountStatus: Int,
     val authStatus: Int,
     val authority: Int,
@@ -48,7 +48,7 @@ data class CreatorComment(
     val province: Int,
     val remarkName: Any,
     val signature: String,
-    val userId: Int,
+    val userId: String,
     val userType: Int,
     val vipType: Int
 )

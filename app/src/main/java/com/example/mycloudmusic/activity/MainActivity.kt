@@ -24,6 +24,9 @@ import com.example.mycloudmusic.base.BaseActivity
 import com.google.android.material.button.MaterialButton
 import org.w3c.dom.Text
 
+/**
+ * 登录的主界面
+ */
 class MainActivity : BaseActivity() {
     private lateinit var mMaterialButton: MaterialButton
     private lateinit var mTvStartTop:TextView

@@ -1,4 +1,4 @@
-package com.example.mycloudmusic
+package com.example.mycloudmusic.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.mycloudmusic.userdata.*
@@ -14,7 +14,6 @@ class MyViewModel: ViewModel() {
         return user
     }
 
-//    var userPlaylist = mutableListOf<UserPlaylist>()
     lateinit var userPlaylist : UserPlaylist
     lateinit var userLevel: UserLevel
     lateinit var recentSong: RecentSong

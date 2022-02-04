@@ -12,7 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.mycloudmusic.MyViewModel
+import com.example.mycloudmusic.viewmodel.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
 import com.example.mycloudmusic.activity.MYUSER
@@ -140,7 +140,7 @@ class LoginPhonePasswordFragment : BaseFragment() {
     private fun loginSuccess(){
         val intent = Intent(activity, HomeActivity::class.java)
         activity?.onBackPressed()
-        activity?.finish()
+        requireActivity().finish()
         startActivity(intent)
     }
 

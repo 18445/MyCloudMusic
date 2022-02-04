@@ -45,7 +45,7 @@ data class Playlist(
 //    val titleImage: Int,
 //    val titleImageUrl: Any,
 //    val totalDuration: Int,
-//    val trackCount: Int,
+    val trackCount: String,
 //    val trackNumberUpdateTime: Long,
 //    val trackUpdateTime: Long,
 //    val tracks: Any,
@@ -83,7 +83,7 @@ data class Creator(
 //    val province: Int,
 //    val remarkName: Any,
 //    val signature: String,
-//    val userId: Int,
+    val userId: String,
 //    val userType: Int,
 //    val vipType: Int
 )
