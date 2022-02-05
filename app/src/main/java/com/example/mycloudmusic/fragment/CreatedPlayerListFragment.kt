@@ -16,13 +16,14 @@ import com.example.mycloudmusic.userdata.UserPlaylist
 import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.example.mycloudmusic.`interface`.RecyclerItemClickListener
 import com.example.mycloudmusic.adapter.PlayerListAdapter
 import com.example.mycloudmusic.util.MyPreloadModelProvider
 
 /**
  * 创建歌单项的Fragment
  */
-class CreatedPlayerListFragment : BaseFragment() {
+class CreatedPlayerListFragment : BaseFragment(),RecyclerItemClickListener {
     private lateinit var mUserPlayerList : UserPlaylist
     private lateinit var userModel : MyViewModel
     private lateinit var mRecyclerView: RecyclerView
@@ -46,6 +47,14 @@ class CreatedPlayerListFragment : BaseFragment() {
     }
 
     /**
+     * Item项的点击回调
+     */
+    override fun onRecyclerViewItemClick(view: View, position: Int) {
+        Log.d("RecycleViewItemClick","${position}:$view be clicked")
+    }
+
+
+    /**
      * 初始化RecycleView的操作
      * 添加PreLoad
      */
@@ -58,7 +67,7 @@ class CreatedPlayerListFragment : BaseFragment() {
         )
         mRecyclerView.addOnScrollListener(preload);
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mRecyclerView.adapter = context?.let { PlayerListAdapter(mPlayerList, it, itemSize) }
+        mRecyclerView.adapter = context?.let { PlayerListAdapter(this,mPlayerList, it, itemSize) }
         Log.d("mPlayerList",mPlayerList.toString())
     }
 
@@ -90,6 +99,8 @@ class CreatedPlayerListFragment : BaseFragment() {
         mRecyclerView = requireView().findViewById(R.id.rv_createdPlayerList)
         UID = userModel.getUser().profile.userId.toString()
     }
+
+
 
 
 }

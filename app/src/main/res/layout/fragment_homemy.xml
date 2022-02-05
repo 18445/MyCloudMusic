@@ -15,6 +15,7 @@
         android:layout_height="280dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
         <!--折叠工具栏布局-->
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_home_top"
@@ -24,7 +25,7 @@
             app:collapsedTitleGravity="center"
             app:contentScrim="#1296db"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="初学者-Study"
+            app:title="User-name"
             app:toolbarId="@+id/toolbar">
 
             <RelativeLayout
@@ -107,12 +108,13 @@
             </RelativeLayout>
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/tb_home_top"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|snap" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

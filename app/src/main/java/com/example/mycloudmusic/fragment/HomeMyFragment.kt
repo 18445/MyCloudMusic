@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mycloudmusic.viewmodel.MyViewModel
 import com.example.mycloudmusic.base.BaseFragment
 import androidx.viewpager2.widget.ViewPager2
@@ -22,6 +24,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.adapter.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlin.math.abs
+import com.example.mycloudmusic.*
+import com.example.mycloudmusic.`interface`.AppBarStateChangeListener
 
 
 /**
@@ -29,6 +34,7 @@ import com.google.android.material.tabs.TabLayoutMediator
  */
 class HomeMyFragment : BaseFragment() {
     private lateinit var mIvUser:ImageView
+    private lateinit var mToolbar: androidx.appcompat.widget.Toolbar
     private lateinit var mIvBackground: ImageView
     private lateinit var mIvSexBackground:ImageView
     private lateinit var userModel : MyViewModel
@@ -62,6 +68,7 @@ class HomeMyFragment : BaseFragment() {
 
     private fun initView(){
         userModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        mToolbar = requireView().findViewById(R.id.tb_home_top)
         mIvSexBackground = requireView().findViewById(R.id.iv_home_sex)
         mIvBackground = requireView().findViewById(R.id.iv_home_background)
         mIvUser = requireView().findViewById(R.id.iv_home_user)
@@ -138,22 +145,20 @@ class HomeMyFragment : BaseFragment() {
      * 滑动时状态栏的变化设置
      */
     private fun setListener(){
-        mAppBarLayout.addOnOffsetChangedListener(object : OnOffsetChangedListener {
-            var isShow = true
-            var scrollRange = -1
-            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.totalScrollRange
-                }
+        mAppBarLayout.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
 
-                if (scrollRange + verticalOffset == 0) { //收缩时
-                    mCollapsingToolbarLayout.title = userModel.getUser().profile.nickname
-                    isShow = true
-                } else if (isShow) { //展开时
+            override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
+                Log.d("STATE", state?.name.toString())
+                if (state === State.EXPANDED) {
+                    //展开状态
                     mCollapsingToolbarLayout.title = ""
-                    isShow = false
+                } else if (state === State.COLLAPSED) {
+                    //折叠状态
+                    mCollapsingToolbarLayout.title = userModel.getUser().profile.nickname
+                } else {
+                    //中间状态
+                    mCollapsingToolbarLayout.title = ""
                 }
-
             }
         })
 

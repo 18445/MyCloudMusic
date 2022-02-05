@@ -11,13 +11,17 @@ import com.bumptech.glide.Glide
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.item.PlayerListItem
 import android.util.Log
-
+import com.example.mycloudmusic.`interface`.RecyclerItemClickListener
 
 
 /**
  * 与歌单有关的RecycleView适配器
  */
-class PlayerListAdapter(private val playerListItems : List<PlayerListItem>,private val context: Context,private val itemSize:Int) : RecyclerView.Adapter<PlayerListAdapter.Holder>() {
+
+/**
+ * 创建歌单类
+ */
+class PlayerListAdapter(val mOnItemClickListener: RecyclerItemClickListener?, private val playerListItems : List<PlayerListItem>, private val context: Context, private val itemSize:Int) : RecyclerView.Adapter<PlayerListAdapter.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_playerlist_type_rv, parent, false)
@@ -32,6 +36,13 @@ class PlayerListAdapter(private val playerListItems : List<PlayerListItem>,priva
             .into(holder.image)
         holder.title.text = currentItem.title
         holder.content.text = currentItem.content
+
+        //设置Item点击回调
+        mOnItemClickListener?.let {
+            holder.itemView.setOnClickListener {
+                mOnItemClickListener.onRecyclerViewItemClick(holder.itemView,position)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -48,6 +59,9 @@ class PlayerListAdapter(private val playerListItems : List<PlayerListItem>,priva
     }
 }
 
+/**
+ * 推荐歌单类
+ */
 class PlayerListAdapter2(private val playerListItems : List<PlayerListItem>,private val context: Context) : RecyclerView.Adapter<PlayerListAdapter2.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView =
@@ -76,6 +90,9 @@ class PlayerListAdapter2(private val playerListItems : List<PlayerListItem>,priv
     }
 }
 
+/**
+ * 收藏歌单类
+ */
 class PlayerListAdapter3(private val playerListItems : List<PlayerListItem>,private val context: Context) : RecyclerView.Adapter<PlayerListAdapter3.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView =
