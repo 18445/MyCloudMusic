@@ -1,5 +1,6 @@
 package com.example.mycloudmusic.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.example.mycloudmusic.`interface`.RecyclerItemClickListener
+import com.example.mycloudmusic.activity.PlayerListActivity
 import com.example.mycloudmusic.adapter.PlayerListAdapter
 import com.example.mycloudmusic.util.MyPreloadModelProvider
 
@@ -51,6 +53,14 @@ class CreatedPlayerListFragment : BaseFragment(),RecyclerItemClickListener {
      */
     override fun onRecyclerViewItemClick(view: View, position: Int) {
         Log.d("RecycleViewItemClick","${position}:$view be clicked")
+        val intent = Intent(context,PlayerListActivity::class.java)
+        val bundle = Bundle()
+        bundle.putParcelable("UserPlayerList",mUserPlayerList)
+        Log.d("UserPlayerList",mUserPlayerList.toString())
+        Log.d("mPosition",position.toString())
+        intent.putExtras(bundle)
+        intent.putExtra("position",position)
+        startActivity(intent)
     }
 
 

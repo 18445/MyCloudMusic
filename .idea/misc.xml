@@ -15,11 +15,13 @@
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_login_password.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_login_phone.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.3398148148148148" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/recycler_item_selector.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_coopen.xml" value="0.3515625" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_home.xml" value="0.33" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_login.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_main2.xml" value="0.32546296296296295" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_playerlist.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_collectedplayerlist.xml" value="0.32546296296296295" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_createdplayerlist.xml" value="0.32100456621004564" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/fragment_find.xml" value="0.32546296296296295" />

@@ -1,15 +1,23 @@
 package com.example.mycloudmusic.userdata
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+import java.io.Serializable
+
 /**
  * 用户歌单信息
  */
-data class UserPlaylist(
+
+@Parcelize
+data class UserPlaylist (
     val code: Int,
     val more: Boolean,
     val playlist: List<Playlist>,
     val version: String
-)
+) : Parcelable, Serializable
 
+@Parcelize
 data class Playlist(
 //    val adType: Int,
 //    val anonimous: Boolean,
@@ -23,7 +31,7 @@ data class Playlist(
     val coverImgUrl: String,
 //    val createTime: Long,
     val creator: Creator,
-    val description: Any,
+    val description: String?,
 //    val englishTitle: Any,
 //    val highQuality: Boolean,
     val id: String,
@@ -52,8 +60,9 @@ data class Playlist(
 //    val updateFrequency: Any,
 //    val updateTime: Long,
 //    val userId: Int
-)
-//
+) : Parcelable
+
+@Parcelize
 data class Creator(
 //    val accountStatus: Int,
 //    val anchor: Boolean,
@@ -86,4 +95,4 @@ data class Creator(
     val userId: String,
 //    val userType: Int,
 //    val vipType: Int
-)
+) : Parcelable
