@@ -49,15 +49,16 @@ class CreatedPlayerListFragment : BaseFragment(),RecyclerItemClickListener {
     }
 
     /**
-     * Item项的点击回调
+     * Item项的点击回调事件
+     * 设置点击跳转加载activity
+     * 完成歌单页面的加载
      */
     override fun onRecyclerViewItemClick(view: View, position: Int) {
         Log.d("RecycleViewItemClick","${position}:$view be clicked")
+        //序列化利用bundle传递对象
         val intent = Intent(context,PlayerListActivity::class.java)
         val bundle = Bundle()
         bundle.putParcelable("UserPlayerList",mUserPlayerList)
-        Log.d("UserPlayerList",mUserPlayerList.toString())
-        Log.d("mPosition",position.toString())
         intent.putExtras(bundle)
         intent.putExtra("position",position)
         startActivity(intent)
