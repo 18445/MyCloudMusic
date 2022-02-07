@@ -15,10 +15,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mycloudmusic.viewmodel.MyViewModel
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.activity.HomeActivity
+import com.example.mycloudmusic.activity.LoginActivity
 import com.example.mycloudmusic.activity.MYUSER
 import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.userdata.LoginFailure
 import com.example.mycloudmusic.userdata.User
+import com.example.mycloudmusic.util.FinishActivityManager
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import okhttp3.*
@@ -139,9 +141,10 @@ class LoginPhonePasswordFragment : BaseFragment() {
      */
     private fun loginSuccess(){
         val intent = Intent(activity, HomeActivity::class.java)
-        activity?.onBackPressed()
-        requireActivity().finish()
         startActivity(intent)
+        activity?.onBackPressed()
+//        requireActivity().finish()
+        FinishActivityManager.manager!!.finishAllActivity()
     }
 
 

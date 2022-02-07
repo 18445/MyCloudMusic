@@ -2,14 +2,18 @@ package com.example.mycloudmusic.base
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import android.util.DisplayMetrics
 
 import android.content.pm.ActivityInfo
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Window
-import androidx.core.view.ViewCompat.getDisplay
+import android.content.Intent
+
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+
+
+
 
 
 open class BaseActivity: AppCompatActivity() {
@@ -24,8 +28,10 @@ open class BaseActivity: AppCompatActivity() {
     var screenDendityDpi //屏幕密度
             = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         supportActionBar?.hide();
 
@@ -54,5 +60,7 @@ open class BaseActivity: AppCompatActivity() {
         screenDendity = displayMetrics.density.toInt() //屏幕密度比例
         screenDendityDpi = displayMetrics.densityDpi //屏幕密度
     }
+
+
 
 }

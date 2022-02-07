@@ -1,5 +1,6 @@
 package com.example.mycloudmusic.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.viewpager2.widget.ViewPager2
@@ -12,17 +13,18 @@ import com.example.mycloudmusic.fragment.LoginPhonePasswordFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.example.mycloudmusic.base.BaseActivity
+import com.example.mycloudmusic.util.FinishActivityManager
 
 
 class LoginActivity : BaseActivity() {
-
+    private var isLogin = true//判断是否登录
     private lateinit var mViewPager2: ViewPager2
     private lateinit var mTabLayout: TabLayout
     private val mList : List<BaseFragment> = listOf(LoginPhoneFragment(),LoginEmailFragment(),LoginPhonePasswordFragment())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)//软键盘弹出画面不移动
         super.onCreate(savedInstanceState)
+        FinishActivityManager.manager!!.addActivity(this@LoginActivity)
         setContentView(R.layout.activity_login)
         initView()
         initPage()

@@ -41,6 +41,4 @@ class SongListAdapter(private val mOnItemClickListener:RecyclerItemClickListener
         val name : TextView = view.findViewById(R.id.tv_song_name)
         val detail : TextView = view.findViewById(R.id.tv_song_detail)
     }
-
-
 }

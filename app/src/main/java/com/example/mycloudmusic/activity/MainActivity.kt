@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.text.set
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.base.BaseActivity
+import com.example.mycloudmusic.util.FinishActivityManager
 import com.google.android.material.button.MaterialButton
 import org.w3c.dom.Text
 
@@ -35,6 +36,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FinishActivityManager.manager!!.addActivity(this@MainActivity)
         setContentView(R.layout.activity_main)
         initView()
         initSpannableString()
@@ -57,6 +59,7 @@ class MainActivity : BaseActivity() {
             }else{
                 val loginIntent = Intent(this@MainActivity,LoginActivity::class.java)
                 startActivity(loginIntent)
+                finish()
             }
         }
 

@@ -62,6 +62,9 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:background="@drawable/recycler_item_selector"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
