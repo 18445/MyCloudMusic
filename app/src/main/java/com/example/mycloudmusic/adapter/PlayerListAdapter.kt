@@ -21,7 +21,7 @@ import com.example.mycloudmusic.`interface`.RecyclerItemClickListener
 /**
  * 创建歌单类
  */
-class PlayerListAdapter(val mOnItemClickListener: RecyclerItemClickListener?, private val playerListItems : List<PlayerListItem>, private val context: Context, private val itemSize:Int) : RecyclerView.Adapter<PlayerListAdapter.Holder>() {
+class PlayerListAdapter(private val mOnItemClickListener: RecyclerItemClickListener?, private val playerListItems : List<PlayerListItem>, private val context: Context, private val itemSize:Int) : RecyclerView.Adapter<PlayerListAdapter.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_playerlist_type_rv, parent, false)

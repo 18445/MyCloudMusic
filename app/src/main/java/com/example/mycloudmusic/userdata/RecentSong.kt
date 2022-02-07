@@ -1,5 +1,8 @@
 package com.example.mycloudmusic.userdata
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * 最近收听的音乐
  */
@@ -62,7 +65,7 @@ data class DataX(
     val tns: List<String>,
     val v: Int
 )
-
+@Parcelize
 data class Al(
     val id: Int,
     val name: String,
@@ -70,14 +73,15 @@ data class Al(
     val picUrl: String,
     val pic_str: String,
     val tns: List<String>
-)
+): Parcelable
 
+@Parcelize
 data class Ar(
-    val alias: List<Any>,
+//    val alias: List<Any>,
     val id: Int,
     val name: String,
-    val tns: List<Any>
-)
+//    val tns: List<Any>
+): Parcelable
 
 data class H(
     val br: Int,

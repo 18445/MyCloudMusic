@@ -18,6 +18,7 @@ data class UserPlaylist (
 
 @Parcelize
 data class Playlist(
+//    val tracks: List<Track>,
 //    val adType: Int,
 //    val anonimous: Boolean,
 //    val artists: Any,

@@ -24,6 +24,7 @@ class SongListAdapter(private val mOnItemClickListener:RecyclerItemClickListener
         holder.position.text = currentItem.position
         holder.detail.text = currentItem.songDetail
         holder.name.text = currentItem.SongName
+        //设计点击事件
         mOnItemClickListener?.let {
             holder.itemView.setOnClickListener {
                 mOnItemClickListener.onRecyclerViewItemClick(holder.itemView,position)

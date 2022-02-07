@@ -61,6 +61,7 @@ class CreatedPlayerListFragment : BaseFragment(),RecyclerItemClickListener {
         bundle.putParcelable("UserPlayerList",mUserPlayerList)
         intent.putExtras(bundle)
         intent.putExtra("position",position)
+        intent.putExtra("cookie",userModel.getUser().cookie)
         startActivity(intent)
     }
 
