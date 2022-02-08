@@ -1,5 +1,7 @@
 package com.example.mycloudmusic.userdata
 
+import kotlinx.parcelize.Parcelize
+
 /**
  * 个人推荐歌曲
  */

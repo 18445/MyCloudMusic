@@ -1,18 +1,20 @@
 package com.example.mycloudmusic.userdata
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * 歌曲的Url类
  */
 data class SongUrl(
     val code: Int,
-    val `data`: List<UrlInfo>
+    @SerializedName("data")
+    val `data`: List<SongData>
 )
-
-data class UrlInfo(
+data class SongData(
     val br: Int,
     val canExtend: Boolean,
     val code: Int,
-    val encodeType: Any,
+    val encodeType: String,
     val expi: Int,
     val fee: Int,
     val flag: Int,
@@ -21,7 +23,7 @@ data class UrlInfo(
     val freeTrialPrivilege: FreeTrialPrivilege,
     val gain: Int,
     val id: Int,
-    val level: Any,
+    val level: String,
     val md5: String,
     val payed: Int,
     val size: Int,

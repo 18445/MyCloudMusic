@@ -1,6 +1,7 @@
 package com.example.mycloudmusic.activity
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -44,6 +45,7 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
     private lateinit var mListDetail : ListDetail
     private lateinit var cookieList : List<String>
     private lateinit var mSongItems : List<SongItem>
+    private lateinit var mCookie : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,7 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
                     arName += mCurrentItem.ar[n].name
                 }
             }
-            val tempItem = SongItem(mCurrentItem.name,arName+" - "+mCurrentItem.al.name,i.toString())
+            val tempItem = SongItem(mCurrentItem.name,arName+" - "+mCurrentItem.al.name,(i+1).toString())
             tempList.add(tempItem)
         }
         mSongItems = tempList
@@ -85,6 +87,14 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
 
     override fun onRecyclerViewItemClick(view: View, position: Int) {
         //Item的点击事件
+        //开启歌单的界面
+        val intent = Intent(this,SongActivity::class.java)
+        val bundle = Bundle()
+        bundle.putParcelable("mListDetail",mListDetail)
+        intent.putExtras(bundle)
+        intent.putExtra("position",position)
+        intent.putExtra("cookie",mCookie)
+        startActivity(intent)
     }
 
     /**
@@ -153,8 +163,8 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
         mBundle = intent.extras!!
         mPlayerList = mBundle.getParcelable<UserPlaylist>("UserPlayerList") as UserPlaylist
         mPosition = intent.getIntExtra("position",-1)
-        val mCookie = intent.getStringExtra("cookie")
-        cookieList = mCookie!!.split(";")
+        mCookie = intent.getStringExtra("cookie").toString()
+        cookieList = mCookie.split(";")
         mCurrentUsr = mPlayerList.playlist[mPosition]
     }
 

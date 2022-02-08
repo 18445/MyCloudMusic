@@ -67,12 +67,12 @@ data class DataX(
 )
 @Parcelize
 data class Al(
-    val id: Int,
+    val id: String,
     val name: String,
     val pic: Long,
     val picUrl: String,
-    val pic_str: String,
-    val tns: List<String>
+//    val pic_str: String,
+//    val tns: List<String>
 ): Parcelable
 
 @Parcelize

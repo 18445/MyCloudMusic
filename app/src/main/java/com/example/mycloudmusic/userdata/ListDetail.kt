@@ -1,5 +1,4 @@
 package com.example.mycloudmusic.userdata
-
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import com.google.gson.annotations.SerializedName
@@ -11,29 +10,31 @@ import com.google.gson.annotations.SerializedName
 /**
  * 获得歌单的详情
  */
+@Parcelize
 data class ListDetail(
     val code: Int,
     @SerializedName("playlist")
     val SongList: SongList,
-    val privileges: List<Privilege>,
-    val relatedVideos: Any,
-    val resEntrance: Any,
-    val sharedPrivilege: Any,
-    val urls: Any
-)
+//    val privileges: List<Privilege>,
+//    val relatedVideos: String,
+//    val resEntrance: String,
+//    val sharedPrivilege: String,
+//    val urls: String
+) : Parcelable
 
 //
-
+@Parcelize
 data class TrackId(
-    val alg: Any,
+//    val alg: String,
     val at: Long,
-    val id: Int,
+    val id: String,
     val rcmdReason: String,
-    val t: Int,
-    val uid: Int,
-    val v: Int
-)
+    val t: String,
+    val uid: String,
+    val v: String
+) : Parcelable
 
+@Parcelize
 data class Track(
 //    val a: Any,
     val al: Al,
@@ -63,25 +64,25 @@ data class Track(
     val pop: String,
     val pst: String,
     val publishTime: Long,
-    val rt: String,
+//    val rt: String,
 //    val rtUrl: Any,
 //    val rtUrls: List<Any>,
 //    val rtype: Int,
 //    val rurl: Any,
-    val s_id: String,
-    val single: String,
-    val st: String,
-    val t: String,
-    val tns: List<String>,
-    val v: String
-)
+//    val s_id: String,
+//    val single: String,
+//    val st: String,
+//    val t: String,
+//    val tns: List<String>,
+//    val v: String
+):Parcelable
 
 
-
+@Parcelize
 data class SongList(
     val adType: Int,
     val backgroundCoverId: Int,
-    val backgroundCoverUrl: Any,
+    val backgroundCoverUrl: String?,
     val cloudTrackCount: Int,
     val commentCount: Int,
     val commentThreadId: String,
@@ -90,40 +91,40 @@ data class SongList(
     val coverImgUrl: String,
     val createTime: Long,
     val creator: Creator,
-    val description: Any,
-    val englishTitle: Any,
-    val highQuality: Boolean,
-    val historySharedUsers: Any,
+    val description: String?,
+//    val englishTitle: String,
+//    val highQuality: Boolean,
+//    val historySharedUsers: String,
     val id: String,
     val name: String,
     val newImported: Boolean,
-    val officialPlaylistType: Any,
-    val opRecommend: Boolean,
-    val ordered: Boolean,
-    val playCount: String,
-    val privacy: String,
-    val remixVideo: Any,
-    val shareCount: Int,
-    val sharedUsers: Any,
-    val specialType: Int,
-    val status: Int,
-    val subscribed: Boolean,
-    val subscribedCount: Int,
-    val subscribers: List<Any>,
-    val tags: List<Any>,
+//    val officialPlaylistType: String,
+//    val opRecommend: Boolean,
+//    val ordered: Boolean,
+//    val playCount: String,
+//    val privacy: String,
+//    val remixVideo: String,
+//    val shareCount: Int,
+//    val sharedUsers: String,
+//    val specialType: Int,
+//    val status: Int,
+//    val subscribed: Boolean,
+//    val subscribedCount: Int,
+//    val subscribers: List<Any>,
+//    val tags: List<Any>,
     val titleImage: Int,
-    val titleImageUrl: Any,
+    val titleImageUrl: String?,
     val trackCount: Int,
     val trackIds: List<TrackId>,
-    val trackNumberUpdateTime: Long,
-    val trackUpdateTime: Long,
+//    val trackNumberUpdateTime: Long,
+//    val trackUpdateTime: Long,
     val tracks: List<Track>,
-    val updateFrequency: Any,
-    val updateTime: Long,
+//    val updateFrequency: String,
+//    val updateTime: Long,
     val userId: String,
-    val videoIds: Any,
-    val videos: Any
-)
+//    val videoIds: String,
+//    val videos: String
+):Parcelable
 //data class Privilege(
 //    val chargeInfoList: List<ChargeInfo>,
 //    val cp: Int,
