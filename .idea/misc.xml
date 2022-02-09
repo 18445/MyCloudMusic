@@ -18,10 +18,13 @@
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_playerlist_play.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_seekbar_thumb_normal.xml" value="0.33515981735159817" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_seekbar_thumb_pressed.xml" value="0.33515981735159817" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_song_bechosen.xml" value="0.33515981735159817" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_song_last.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_song_next.xml" value="0.3398148148148148" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_song_pause.xml" value="0.33515981735159817" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/ic_song_play.xml" value="0.3398148148148148" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/recycler_item_selector.xml" value="0.3398148148148148" />
+        <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/sb_bar.xml" value="0.33515981735159817" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/drawable/sb_thumb.xml" value="0.33515981735159817" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_coopen.xml" value="0.3515625" />
         <entry key="..\:/AndroidStudio/Project/MyCloudMusic/app/src/main/res/layout/activity_home.xml" value="0.33" />

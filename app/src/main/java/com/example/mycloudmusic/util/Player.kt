@@ -20,8 +20,7 @@ import java.util.*
 /**
  * 音乐播放工具类
  */
-class Player(private val skbProgress: SeekBar) : OnBufferingUpdateListener,
-    OnCompletionListener, OnPreparedListener {
+class Player(private val skbProgress: SeekBar) : OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener {
 
     var mediaPlayer: MediaPlayer? = null
     private val mTimer: Timer = Timer()
@@ -40,9 +39,11 @@ class Player(private val skbProgress: SeekBar) : OnBufferingUpdateListener,
     var handleProgress: Handler = object : Handler(Looper.myLooper()!!) {
         override fun handleMessage(msg: Message) {
             val position = mediaPlayer!!.currentPosition
+            Log.d("currentPosition:",position.toString())
             val duration = mediaPlayer!!.duration
             if (duration > 0) {
-                val pos = (skbProgress.max * position / duration).toLong()
+                val pos = (skbProgress.max * (position.toDouble() / duration))
+                Log.d("music pos:",pos.toString())
                 skbProgress.progress = pos.toInt()
             }
         }
@@ -84,7 +85,7 @@ class Player(private val skbProgress: SeekBar) : OnBufferingUpdateListener,
      * 通过onPrepared播放
      */
     override fun onPrepared(player: MediaPlayer) {
-        player.start()
+//        player.start()
         Log.e("mediaPlayer", "onPrepared")
     }
 

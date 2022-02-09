@@ -72,7 +72,9 @@
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
     <SeekBar
-        android:thumb="@drawable/sb_thumb"
+        android:maxHeight="5dp"
+        android:progressDrawable="@drawable/sb_bar"
+        android:thumb="@drawable/ic_seekbar_thumb_normal"
         android:max="100000"
         android:id="@+id/sb_song_below"
         android:layout_width="275dp"

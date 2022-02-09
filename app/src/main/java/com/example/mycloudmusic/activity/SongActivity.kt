@@ -1,6 +1,8 @@
 package com.example.mycloudmusic.activity
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -35,22 +37,43 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mTvTimeRight :TextView
     private lateinit var mSeekBar: SeekBar
 
-    private lateinit var mPlayer : Player
-    private lateinit var mCookie : String
     private lateinit var cookieList : List<String>
     private lateinit var mListDetail : ListDetail
+    private lateinit var mSongUrl: SongUrl
+    private lateinit var mPlayer : Player
+    private lateinit var mCookie : String
     private lateinit var mBundle: Bundle
     private lateinit var mTrack:Track
     private var mPosition = -1
-    private lateinit var mSongUrl: SongUrl
+    private var isPlay = false
     private var mTime = 0
+
+    //获得边界
+    private lateinit var mBound : android.graphics.Rect
+    lateinit var mDrawableNormal: Drawable
+    lateinit var mDrawablePress: Drawable
 
     override fun onClick(v: View?) {
         when (v) {
-            mIvPlay -> {mPlayer.playUrl(mSongUrl.data[0].url)
-                Log.d("music player","is playing")}
+            mIvPlay -> {
+                isPlay = if(isPlay){
+                    //暂停
+                    mPlayer.pause()
+                    mIvPlay.setImageResource(R.drawable.ic_song_play)
+                    false
+                }else{
+                    //播放
+                    mPlayer.play()
+                    mIvPlay.setImageResource(R.drawable.ic_song_pause)
+                    Log.d("music player","is playing")
+                    true
+                }
+            }
         }
+
+
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_song)
@@ -66,36 +89,42 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      */
     private fun setClick(){
         mIvPlay.setOnClickListener(this)
-        mSeekBar.thumb.transparentRegion
     }
 
     /**
      *初始化进度条的操作
+     * 设置SeekBar的点击事件
      */
     private fun initSeekBar(){
         mSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            var mSeekTime  = -1
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {//改变进度条
                 if(mTime != 0 ){
-                    val percent : Double = (progress.toDouble()/100000)
+                    val percent : Double = (progress.toDouble()/100000)//百分比
                     Log.d("bar change",percent.toString())
-                    val currentTime = mTime * percent
+                    val currentTime = mTime * percent//到达进度条的时间（ms）
+                    mSeekTime = currentTime.toInt()
                     Log.d("bar change",currentTime.toString())
                     val leftTime = setTime(currentTime.toInt())
                     mTvTimeLeft.text = leftTime
                 }
-
-
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {//触碰进度条
-
+                if(mTime != 0){
+                    mSeekBar.thumb = mDrawablePress
+                }
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {//松开进度条
-
+                if(mTime != 0){
+                    mSeekBar.thumb = mDrawableNormal
+                }
+                if(mSeekTime != -1){
+                    mPlayer.mediaPlayer?.seekTo(mSeekTime);//歌曲到达的时间
+                }
             }
         })
-
     }
 
     /**
@@ -123,13 +152,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         if (minTemp < 10 ){
             min += minTemp.toString()
         }
-//        if (secTemp > 99){
-//            val sec = secTemp.toString().subSequence(0,2).toString()
-//        }else if (secTemp > 10){
-//            val sec = secTemp.toString()
-//        }else {
-//            val sec = "0${secTemp}"
-//        }
         val sec : String = when(secTemp){
             in 100..Int.MAX_VALUE -> {secTemp.toString().subSequence(0,2).toString()}
             in 10..99 -> {secTemp.toString()}
@@ -142,6 +164,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     }
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun initView(){
         mIvPlay = findViewById(R.id.iv_song_play)
         mIvPlayLast = findViewById(R.id.iv_song_playLast)
@@ -150,6 +173,13 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mTvTimeRight = findViewById(R.id.tv_songTime_right)
         mSeekBar = findViewById(R.id.sb_song_below)
         mPlayer =  Player(mSeekBar)
+
+
+        mBound = mSeekBar.thumb.bounds
+        mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
+        mDrawableNormal = resources.getDrawable(R.drawable.ic_seekbar_thumb_normal,null)
+        mDrawableNormal.bounds = mBound
+        mDrawablePress.bounds = mBound
     }
 
     /**
@@ -205,7 +235,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                 runOnUiThread {
                     setTime(mTime).also { mTvTimeRight.text = it }
                 }
-
+                mPlayer.playUrl(mSongUrl.data[0].url)
             }
         })
     }

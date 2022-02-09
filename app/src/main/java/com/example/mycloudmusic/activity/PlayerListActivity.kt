@@ -87,7 +87,7 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
 
     override fun onRecyclerViewItemClick(view: View, position: Int) {
         //Item的点击事件
-        //开启歌单的界面
+        //开启歌曲的界面
         val intent = Intent(this,SongActivity::class.java)
         val bundle = Bundle()
         bundle.putParcelable("mListDetail",mListDetail)
