@@ -19,13 +19,15 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.media.MediaPlayer
+import android.view.View
 import android.widget.SeekBar.OnSeekBarChangeListener
+import com.example.mycloudmusic.util.Player
 
 
 /**
  * 歌曲界面
  */
-class SongActivity : BaseActivity() {
+class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mIvPlay:ImageView
     private lateinit var mIvPlayLast:ImageView
     private lateinit var mIvPlayNext:ImageView
@@ -33,6 +35,7 @@ class SongActivity : BaseActivity() {
     private lateinit var mTvTimeRight :TextView
     private lateinit var mSeekBar: SeekBar
 
+    private lateinit var mPlayer : Player
     private lateinit var mCookie : String
     private lateinit var cookieList : List<String>
     private lateinit var mListDetail : ListDetail
@@ -42,15 +45,29 @@ class SongActivity : BaseActivity() {
     private lateinit var mSongUrl: SongUrl
     private var mTime = 0
 
+    override fun onClick(v: View?) {
+        when (v) {
+            mIvPlay -> {mPlayer.playUrl(mSongUrl.data[0].url)
+                Log.d("music player","is playing")}
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_song)
         initView()
+        setClick()
         initData()
         getSongUrl()
         initSeekBar()
     }
 
+    /**
+     * 设置点击操作
+     */
+    private fun setClick(){
+        mIvPlay.setOnClickListener(this)
+        mSeekBar.thumb.transparentRegion
+    }
 
     /**
      *初始化进度条的操作
@@ -59,13 +76,14 @@ class SongActivity : BaseActivity() {
         mSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {//改变进度条
                 if(mTime != 0 ){
-                    val percent : Double = (progress.toDouble()/100)
+                    val percent : Double = (progress.toDouble()/100000)
                     Log.d("bar change",percent.toString())
                     val currentTime = mTime * percent
                     Log.d("bar change",currentTime.toString())
                     val leftTime = setTime(currentTime.toInt())
                     mTvTimeLeft.text = leftTime
                 }
+
 
             }
 
@@ -131,6 +149,7 @@ class SongActivity : BaseActivity() {
         mTvTimeLeft = findViewById(R.id.tv_songTime_left)
         mTvTimeRight = findViewById(R.id.tv_songTime_right)
         mSeekBar = findViewById(R.id.sb_song_below)
+        mPlayer =  Player(mSeekBar)
     }
 
     /**
