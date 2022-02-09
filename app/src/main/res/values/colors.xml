@@ -11,4 +11,6 @@
     <color name="blue">#005CE7</color>
     <color name="gray">#808080</color>
     <color name="item_gray">#c1c1c2</color>
+    <color name="item_white">#FFFAFA</color>
+    <color name="GhostWhite">#F8F8FF</color>
 </resources>

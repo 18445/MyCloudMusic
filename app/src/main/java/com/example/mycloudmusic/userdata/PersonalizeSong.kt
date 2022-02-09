@@ -1,5 +1,6 @@
 package com.example.mycloudmusic.userdata
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -18,12 +19,13 @@ data class SongResult(
     val id: Int,
     val name: String,
     val picUrl: String,
-    val song: Song,
+    @SerializedName("song")
+    val song: SongPerson,
     val trackNumberUpdateTime: Any,
     val type: Int
 )
 
-data class Song(
+data class SongPerson(
     val album: Album,
     val alias: List<String>,
     val artists: List<ArtistXX>,

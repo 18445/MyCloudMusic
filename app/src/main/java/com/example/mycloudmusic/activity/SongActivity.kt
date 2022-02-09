@@ -1,7 +1,10 @@
 package com.example.mycloudmusic.activity
 
+import GlideBlurTransformation
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.Color.alpha
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -23,7 +26,16 @@ import java.util.concurrent.TimeUnit
 import android.media.MediaPlayer
 import android.view.View
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.example.mycloudmusic.userdata.SongDetail
 import com.example.mycloudmusic.util.Player
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import jp.wasabeef.glide.transformations.BlurTransformation
 
 
 /**
@@ -36,9 +48,13 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mTvTimeLeft :TextView
     private lateinit var mTvTimeRight :TextView
     private lateinit var mSeekBar: SeekBar
+    private lateinit var mTvTitle : TextView
+    private lateinit var mTvArtist : TextView
 
+    private lateinit var mView : ConstraintLayout
     private lateinit var cookieList : List<String>
     private lateinit var mListDetail : ListDetail
+    private lateinit var mSongDetail: SongDetail
     private lateinit var mSongUrl: SongUrl
     private lateinit var mPlayer : Player
     private lateinit var mCookie : String
@@ -80,6 +96,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         initView()
         setClick()
         initData()
+        getSongDetail()
         getSongUrl()
         initSeekBar()
     }
@@ -89,6 +106,48 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      */
     private fun setClick(){
         mIvPlay.setOnClickListener(this)
+    }
+
+    /**
+     *完成歌曲界面的UI设置
+     */
+    private fun initPageUi(){
+        val songName = mListDetail.SongList.tracks[mPosition].name
+        var songArtist = ""
+        for(n in mListDetail.SongList.tracks[mPosition].ar.indices){
+            songArtist += if(n != mListDetail.SongList.tracks[mPosition].ar.size-1){
+                mListDetail.SongList.tracks[mPosition].ar[n].name+"/"
+            }else{
+                mListDetail.SongList.tracks[mPosition].ar[n].name
+            }
+        }
+        //顶部TextView部分
+        mTvTitle.text = songName
+        mTvArtist.text = songArtist
+        Log.d("mSongDetail",mSongDetail.toString())
+        val url = mSongDetail.songs[0].al.picUrl
+        Log.d("picUrl",url)
+
+
+        //自定义target
+        val customTarget: CustomTarget<Drawable?> = object : CustomTarget<Drawable?>(1000,1000) {
+            override fun onResourceReady(
+                resource: Drawable,
+                transition: Transition<in Drawable?>?
+            ) {
+                mView.background = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+
+            }
+        }
+                //加载背景图
+                Glide.with(this)
+                    .load(url)
+                    .transform(BlurTransformation(25,12))
+                    .into(customTarget)
+
     }
 
     /**
@@ -172,14 +231,17 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mTvTimeLeft = findViewById(R.id.tv_songTime_left)
         mTvTimeRight = findViewById(R.id.tv_songTime_right)
         mSeekBar = findViewById(R.id.sb_song_below)
+        mTvTitle = findViewById(R.id.tv_song_titleName)
+        mTvArtist = findViewById(R.id.tv_song_artistName)
+        mView = findViewById(R.id.Layout_song_view)
         mPlayer =  Player(mSeekBar)
-
 
         mBound = mSeekBar.thumb.bounds
         mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
         mDrawableNormal = resources.getDrawable(R.drawable.ic_seekbar_thumb_normal,null)
         mDrawableNormal.bounds = mBound
         mDrawablePress.bounds = mBound
+
     }
 
     /**
@@ -236,6 +298,50 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     setTime(mTime).also { mTvTimeRight.text = it }
                 }
                 mPlayer.playUrl(mSongUrl.data[0].url)
+            }
+        })
+    }
+
+    /**
+     * 获得歌曲详细
+     */
+    private fun getSongDetail(){
+        val client = OkHttpClient.Builder()
+            .readTimeout(10000, TimeUnit.MILLISECONDS)
+            .writeTimeout(20000, TimeUnit.MILLISECONDS)
+            .addInterceptor(LoggingInterceptor())
+            .build()
+
+        val requestBody = FormBody.Builder()
+            .add("ids",mTrack.id)
+            .build()
+
+        val request = Request.Builder()
+            .url("https://netease-cloud-music-api-18445.vercel.app/song/detail")
+            .apply {
+                val length = cookieList.count()
+                for(i in 0..length-5 step 1){
+                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+                }
+            }
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.d(ContentValues.TAG, "onFailure: ${e.message}")
+                Toast.makeText(this@SongActivity, "网络请求错误", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val userData = response.body?.string()
+                val mGson = Gson()
+                mSongDetail  = mGson.fromJson(userData,SongDetail::class.java)
+                Log.d("SongDetail",mSongDetail.toString())
+                runOnUiThread {
+                    //更新UI
+                    initPageUi()
+                }
             }
         })
     }
