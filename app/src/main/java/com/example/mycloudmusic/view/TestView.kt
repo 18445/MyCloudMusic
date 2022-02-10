@@ -1,18 +1,14 @@
 package com.example.mycloudmusic.view
 
 import android.view.View
-import android.animation.ValueAnimator
-import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.Log
-import android.util.TypedValue
 import com.example.mycloudmusic.util.dpToPx
 
 /**

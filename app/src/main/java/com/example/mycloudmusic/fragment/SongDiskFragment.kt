@@ -1,5 +1,6 @@
 package com.example.mycloudmusic.fragment
 
+import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
@@ -30,6 +31,7 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
     private var mSongLyric : Lyric? = null
     private var mSong : Song? = null
     private lateinit var mSongModel : SongViewModel
+    private lateinit var mCircleAnimator : ObjectAnimator
     private lateinit var cookieList : List<String>
     private lateinit var mDisk : ImageView
     private val client = OkHttpClient.Builder()
@@ -65,7 +67,6 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
      * 更新Ui的操作
      */
     private fun updateUi(){
-//        mCurrentUserSong.song?.al?.picUrl.let {
         mSong?.al?.picUrl.let {
             if (it != null) {
                 loadImage(it)
@@ -87,13 +88,13 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
      *初始化歌曲
      */
     private fun initOneSong(){
-//        initSongUrl(id)
-//        initSongLyric(id)
+        initSongUrl(id)
+        initSongLyric(id)
         initSongDetail(id)
-//        mCurrentUserSong.lyric = mSongLyric
-//        mCurrentUserSong.song = mSong
-//        mCurrentUserSong.songUrl = mSongUrl
-//        Log.d("MyOneSong",mCurrentUserSong.toString())
+        mCurrentUserSong.lyric = mSongLyric
+        mCurrentUserSong.song = mSong
+        mCurrentUserSong.songUrl = mSongUrl
+        Log.d("MyOneSong",mCurrentUserSong.toString())
     }
 
     private fun initSongDetail(id:String) {
