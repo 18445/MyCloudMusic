@@ -19,6 +19,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import android.media.MediaPlayer
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModel
@@ -60,6 +61,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mCookie : String
     private lateinit var mBundle: Bundle
     private lateinit var mTrack:Track
+    private lateinit var mId:String
     private val mGson = Gson()
     private var mPosition = -1
     private var isPlay = false
@@ -81,14 +83,14 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_song)
         songViewModel =  ViewModelProvider(this@SongActivity).get(SongViewModel::class.java)
         initView()
-        initPage()
         initData()
+        initPage()
         setClick()
         getSongDetail()
         getSongUrl()
         initSeekBar()
 
-        initAllSong()
+//        initAllSong()
     }
 
     override fun onClick(v: View?) {
@@ -186,12 +188,14 @@ class SongActivity : BaseActivity(), View.OnClickListener {
 
     /**
      * 初始化ViewPager2的设置
+     * mPosition 在歌单中的位置
+     * id 歌曲id
      */
     private fun initPage(){
-        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition ){
+        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition ,mTrack.id){
             when(it){
-                1 ->{mVp2Outer.isUserInputEnabled = true}
-                0 ->{mVp2Outer.isUserInputEnabled = false}
+                0 ->{mVp2Outer.isUserInputEnabled = true}
+                1 ->{mVp2Outer.isUserInputEnabled = false}
                 else ->{}
             }
         }
@@ -277,9 +281,11 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mBundle = intent.extras!!
         mListDetail = mBundle.getParcelable<ListDetail>("mListDetail") as ListDetail
         mCookie = intent.getStringExtra("cookie").toString()
+        mId = intent.getStringExtra("id").toString()
         mPosition = intent.getIntExtra("position",-1)
         cookieList = mCookie.split(";")
         mTrack = mListDetail.SongList.tracks[mPosition]
+        songViewModel.cookieList = cookieList
     }
 
     /**
@@ -394,10 +400,12 @@ class SongActivity : BaseActivity(), View.OnClickListener {
             override fun onResponse(call: Call, response: Response) {
                 val userData = response.body?.string()
                 tempSongURL = mGson.fromJson(userData, SongUrl::class.java)
+                Log.d("temp song item",tempSongURL.toString())
             }
         })
         return tempSongURL
     }
+
 
     private fun getAllSongDetail(id:String) : SongDetail?{
 
@@ -427,6 +435,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                 val userData = response.body?.string()
                 val mGson = Gson()
                 tempSongDetail  = mGson.fromJson(userData,SongDetail::class.java)
+                Log.d("temp song item",tempSongDetail.toString())
 
             }
         })
@@ -460,6 +469,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                 val userData = response.body?.string()
                 val mGson = Gson()
                 tempSongLyric  = mGson.fromJson(userData,Lyric::class.java)
+                Log.d("temp song item",tempSongLyric.toString())
 
             }
         })
@@ -472,32 +482,39 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      */
     private fun initAllSong(){
         val ids = mListDetail.SongList.trackIds
-        val usrSongList = mutableListOf<OneSong>()
-        //得到不超过10首歌的数据
+        val userSongList = mutableMapOf<Int,OneSong>()
+        //得到不超过15首歌的数据
         val length = if(15>=ids.size){ ids.size }else { 15 }
         //判断是否能将歌单里面的歌曲都存储下来
         val isOverSize = length < ids.size
 
-        if(isOverSize){
-            for(i in 0 until length){
-                val tempUrl = getAllSongUrl(ids[i].id)
-                val tempDetail = getAllSongDetail(ids[i].id)
-                val tempSongLyric = getAllSongLyric(ids[i].id)
-                val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
-                usrSongList.add(tempOneSong)
-            }
-        }else{
-            //距离当前点击歌曲最近的15首歌
-            val index = if(mPosition >= 7){mPosition-7}else{0}
-            for(i in index until mPosition){
-                val tempUrl = getAllSongUrl(ids[i].id)
-                val tempDetail = getAllSongDetail(ids[i].id)
-                val tempSongLyric = getAllSongLyric(ids[i].id)
-                val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
-                usrSongList.add(tempOneSong)
-            }
-       }
-        songViewModel.userSongs = UserSong(usrSongList)
+//        if(isOverSize){
+//            for(i in 0 until length){
+//                val tempUrl = getAllSongUrl(ids[i].id)
+//                val tempDetail = getAllSongDetail(ids[i].id)
+//                val tempSongLyric = getAllSongLyric(ids[i].id)
+//                val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
+//                usrSongList.add(tempOneSong)
+//            }
+//        }else{
+//            //距离当前点击歌曲最近的15首歌
+//            val index = if(mPosition >= 7){mPosition-7}else{0}
+//            for(i in index until mPosition){
+//                val tempUrl = getAllSongUrl(ids[i].id)
+//                val tempDetail = getAllSongDetail(ids[i].id)
+//                val tempSongLyric = getAllSongLyric(ids[i].id)
+//                val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
+//                usrSongList.add(tempOneSong)
+//            }
+//       }
+        val tempUrl = getAllSongUrl(ids[mPosition].id)
+        val tempDetail = getAllSongDetail(ids[mPosition].id)
+        val tempSongLyric = getAllSongLyric(ids[mPosition].id)
+        val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
+
+        userSongList[mPosition] = tempOneSong
+
+        songViewModel.userSongs = UserSong(userSongList)
         Log.d("SongViewModelData",songViewModel.userSongs.toString())
     }
 }

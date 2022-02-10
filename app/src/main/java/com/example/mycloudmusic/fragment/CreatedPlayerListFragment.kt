@@ -60,6 +60,7 @@ class CreatedPlayerListFragment : BaseFragment(),RecyclerItemClickListener {
         val bundle = Bundle()
         bundle.putParcelable("UserPlayerList",mUserPlayerList)
         intent.putExtras(bundle)
+        intent.putExtra("id",UID)
         intent.putExtra("position",position)
         intent.putExtra("cookie",userModel.getUser().cookie)
         startActivity(intent)

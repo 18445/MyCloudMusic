@@ -9,5 +9,6 @@ import com.example.mycloudmusic.userdata.UserSong
  */
 class SongViewModel : ViewModel(){
     lateinit var userSongs : UserSong
+    lateinit var cookieList : List<String>
 }
 

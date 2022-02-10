@@ -17,7 +17,7 @@ import com.example.mycloudmusic.base.BaseFragment
  * mPosition:传入页面的位置
  * isAllowed:判断是否运行滑动，如果是在歌词界面就不允许滑动
  */
-class SongInnerFragment(private val mPosition: Int,private val isAllowedMove :((Int) -> Unit)) : BaseFragment(),View.OnClickListener{
+class SongInnerFragment(private val mPosition: Int,private val id:String,private val isAllowedMove :((Int) -> Unit)) : BaseFragment(),View.OnClickListener{
     private lateinit var mVp2Inner: ViewPager2
 
     override fun onCreateView(
@@ -40,7 +40,7 @@ class SongInnerFragment(private val mPosition: Int,private val isAllowedMove :((
     }
 
     private fun initPage() {
-        mVp2Inner.adapter = FragmentPagerAdapter(requireActivity(),mPosition)
+        mVp2Inner.adapter = FragmentPagerAdapter(requireActivity(),mPosition,id)
         mVp2Inner.offscreenPageLimit = 2
         mVp2Inner.isUserInputEnabled = false
         mVp2Inner.setCurrentItem(0,false)
@@ -59,7 +59,6 @@ class SongInnerFragment(private val mPosition: Int,private val isAllowedMove :((
                     }
                 //取消动画效果
                 isAllowedMove(currentItem)
-
                 mVp2Inner.setCurrentItem(currentItem,false)
             }
         }
@@ -67,5 +66,9 @@ class SongInnerFragment(private val mPosition: Int,private val isAllowedMove :((
 
     private fun setClick() {
         mVp2Inner.setOnClickListener(this)
+        //长按事件屏蔽单击事件
+        mVp2Inner.setOnLongClickListener {
+            true
+        }
     }
 }
