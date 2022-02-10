@@ -682,7 +682,7 @@ class HomeActivity : BaseActivity() {
                     Looper.loop()
 
                 } else {
-                    userModel.lyric = mGson.fromJson(userData, lyric::class.java)
+                    userModel.lyric = mGson.fromJson(userData, Lyric::class.java)
                 }
             }
         })

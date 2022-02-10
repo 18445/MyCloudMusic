@@ -1,10 +1,7 @@
 package com.example.mycloudmusic.activity
 
-import GlideBlurTransformation
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.graphics.Bitmap
-import android.graphics.Color.alpha
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -14,9 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.base.BaseActivity
-import com.example.mycloudmusic.userdata.ListDetail
-import com.example.mycloudmusic.userdata.SongUrl
-import com.example.mycloudmusic.userdata.Track
 import com.example.mycloudmusic.util.LoggingInterceptor
 import com.google.gson.Gson
 import okhttp3.*
@@ -27,16 +21,17 @@ import android.media.MediaPlayer
 import android.view.View
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
-import com.example.mycloudmusic.userdata.SongDetail
 import com.example.mycloudmusic.util.Player
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.mycloudmusic.adapter.FragmentPagerAdapter
+import com.example.mycloudmusic.adapter.FragmentPagerOuterAdapter
+import com.example.mycloudmusic.userdata.*
+import com.example.mycloudmusic.view.RoundBackgroundView
+import com.example.mycloudmusic.viewmodel.SongViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
@@ -44,17 +39,19 @@ import jp.wasabeef.glide.transformations.BlurTransformation
  * 歌曲界面
  */
 class SongActivity : BaseActivity(), View.OnClickListener {
-    private lateinit var mIvPlay:ImageView
+    private lateinit var mBackground : RoundBackgroundView
+    private lateinit var mView : ConstraintLayout
+    private lateinit var mVp2Outer: ViewPager2
     private lateinit var mIvPlayLast:ImageView
     private lateinit var mIvPlayNext:ImageView
-    private lateinit var mTvTimeLeft :TextView
     private lateinit var mTvTimeRight :TextView
-    private lateinit var mSeekBar: SeekBar
-    private lateinit var mTvTitle : TextView
+    private lateinit var mTvTimeLeft :TextView
     private lateinit var mTvArtist : TextView
-    private lateinit var mViewPager2: ViewPager2
+    private lateinit var mTvTitle : TextView
+    private lateinit var mIvPlay:ImageView
+    private lateinit var mSeekBar: SeekBar
 
-    private lateinit var mView : ConstraintLayout
+    private lateinit var songViewModel : SongViewModel
     private lateinit var cookieList : List<String>
     private lateinit var mListDetail : ListDetail
     private lateinit var mSongDetail: SongDetail
@@ -63,9 +60,16 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mCookie : String
     private lateinit var mBundle: Bundle
     private lateinit var mTrack:Track
+    private val mGson = Gson()
     private var mPosition = -1
     private var isPlay = false
     private var mTime = 0
+
+    private val client = OkHttpClient.Builder()
+        .readTimeout(10000, TimeUnit.MILLISECONDS)
+        .writeTimeout(20000, TimeUnit.MILLISECONDS)
+        .addInterceptor(LoggingInterceptor())
+        .build()
 
     //获得边界
     private lateinit var mBound : android.graphics.Rect
@@ -75,13 +79,16 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_song)
+        songViewModel =  ViewModelProvider(this@SongActivity).get(SongViewModel::class.java)
         initView()
-        setClick()
+        initPage()
         initData()
+        setClick()
         getSongDetail()
         getSongUrl()
         initSeekBar()
-        initPage()
+
+        initAllSong()
     }
 
     override fun onClick(v: View?) {
@@ -101,22 +108,8 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     true
                 }
             }
-            //ViewPager2切换
-            mViewPager2->{
-                Log.d("ViewPager2:","be clicked")
-                val currentItem =
-                    when(mViewPager2.currentItem){
-                        0 -> 1
-                        1 -> 0
-                        else -> 0
-                    }
-                //取消动画效果
-                mViewPager2.setCurrentItem(currentItem,false)
-            }
 
         }
-
-
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -130,8 +123,11 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mTvTitle = findViewById(R.id.tv_song_titleName)
         mTvArtist = findViewById(R.id.tv_song_artistName)
         mView = findViewById(R.id.Layout_song_view)
-        mViewPager2 = findViewById(R.id.vp2_song_music)
+        mBackground = findViewById(R.id.rbg_song_bottom)
+        mVp2Outer = findViewById(R.id.vp2_song_main)
         mPlayer =  Player(mSeekBar)
+
+
 
         mBound = mSeekBar.thumb.bounds
         mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
@@ -146,7 +142,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      */
     private fun setClick(){
         mIvPlay.setOnClickListener(this)
-        mViewPager2.setOnClickListener(this)
     }
 
     /**
@@ -193,11 +188,14 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      * 初始化ViewPager2的设置
      */
     private fun initPage(){
-        mViewPager2.adapter = FragmentPagerAdapter(this)
-        mViewPager2.offscreenPageLimit = 2
-        mViewPager2.isUserInputEnabled = false
-        mViewPager2.setCurrentItem(1,false)
-
+        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition ){
+            when(it){
+                1 ->{mVp2Outer.isUserInputEnabled = true}
+                0 ->{mVp2Outer.isUserInputEnabled = false}
+                else ->{}
+            }
+        }
+        mVp2Outer.offscreenPageLimit = 3
     }
 
     /**
@@ -288,11 +286,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      * 获得歌曲的Url
      */
     private fun getSongUrl(){
-        val client = OkHttpClient.Builder()
-            .readTimeout(10000, TimeUnit.MILLISECONDS)
-            .writeTimeout(20000, TimeUnit.MILLISECONDS)
-            .addInterceptor(LoggingInterceptor())
-            .build()
 
         val requestBody = FormBody.Builder()
             .add("id",mTrack.id)
@@ -334,11 +327,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      * 获得歌曲详细
      */
     private fun getSongDetail(){
-        val client = OkHttpClient.Builder()
-            .readTimeout(10000, TimeUnit.MILLISECONDS)
-            .writeTimeout(20000, TimeUnit.MILLISECONDS)
-            .addInterceptor(LoggingInterceptor())
-            .build()
 
         val requestBody = FormBody.Builder()
             .add("ids",mTrack.id)
@@ -374,4 +362,142 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         })
     }
 
+    /**
+     * 获得歌曲Url，详细，歌词的三个工具类：
+     */
+
+    private fun getAllSongUrl(id:String) : SongUrl?{
+
+        val requestBody = FormBody.Builder()
+            .add("id",id)
+            .add("br", 320000.toString())
+            .build()
+
+        val request = Request.Builder()
+            .url("https://netease-cloud-music-api-18445.vercel.app/song/url")
+            .apply {
+                val length = cookieList.count()
+                for(i in 0..length-5 step 1){
+                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+                }
+            }
+            .post(requestBody)
+            .build()
+
+        var tempSongURL : SongUrl?= null
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.d(ContentValues.TAG, "onFailure: ${e.message}")
+                Toast.makeText(this@SongActivity, "网络请求错误", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val userData = response.body?.string()
+                tempSongURL = mGson.fromJson(userData, SongUrl::class.java)
+            }
+        })
+        return tempSongURL
+    }
+
+    private fun getAllSongDetail(id:String) : SongDetail?{
+
+        val requestBody = FormBody.Builder()
+            .add("ids",id)
+            .build()
+
+        val request = Request.Builder()
+            .url("https://netease-cloud-music-api-18445.vercel.app/song/detail")
+            .apply {
+                val length = cookieList.count()
+                for(i in 0..length-5 step 1){
+                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+                }
+            }
+            .post(requestBody)
+            .build()
+
+        var tempSongDetail : SongDetail? = null
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.d(ContentValues.TAG, "onFailure: ${e.message}")
+                Toast.makeText(this@SongActivity, "网络请求错误", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val userData = response.body?.string()
+                val mGson = Gson()
+                tempSongDetail  = mGson.fromJson(userData,SongDetail::class.java)
+
+            }
+        })
+        return tempSongDetail
+    }
+
+    private fun getAllSongLyric(id:String) : Lyric?{
+        val requestBody = FormBody.Builder()
+            .add("id",id)
+            .build()
+
+        val request = Request.Builder()
+            .url("https://netease-cloud-music-api-18445.vercel.app/lyric")
+            .apply {
+                val length = cookieList.count()
+                for(i in 0..length-5 step 1){
+                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+                }
+            }
+            .post(requestBody)
+            .build()
+
+        var tempSongLyric : Lyric? = null
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.d(ContentValues.TAG, "onFailure: ${e.message}")
+                Toast.makeText(this@SongActivity, "网络请求错误", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val userData = response.body?.string()
+                val mGson = Gson()
+                tempSongLyric  = mGson.fromJson(userData,Lyric::class.java)
+
+            }
+        })
+        return tempSongLyric
+    }
+
+    /**
+     * 将歌单中部分内容网络请求
+     * 加载带ViewModel中
+     */
+    private fun initAllSong(){
+        val ids = mListDetail.SongList.trackIds
+        val usrSongList = mutableListOf<OneSong>()
+        //得到不超过10首歌的数据
+        val length = if(15>=ids.size){ ids.size }else { 15 }
+        //判断是否能将歌单里面的歌曲都存储下来
+        val isOverSize = length < ids.size
+
+        if(isOverSize){
+            for(i in 0 until length){
+                val tempUrl = getAllSongUrl(ids[i].id)
+                val tempDetail = getAllSongDetail(ids[i].id)
+                val tempSongLyric = getAllSongLyric(ids[i].id)
+                val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
+                usrSongList.add(tempOneSong)
+            }
+        }else{
+            //距离当前点击歌曲最近的15首歌
+            val index = if(mPosition >= 7){mPosition-7}else{0}
+            for(i in index until mPosition){
+                val tempUrl = getAllSongUrl(ids[i].id)
+                val tempDetail = getAllSongDetail(ids[i].id)
+                val tempSongLyric = getAllSongLyric(ids[i].id)
+                val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
+                usrSongList.add(tempOneSong)
+            }
+       }
+        songViewModel.userSongs = UserSong(usrSongList)
+        Log.d("SongViewModelData",songViewModel.userSongs.toString())
+    }
 }

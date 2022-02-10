@@ -80,6 +80,7 @@
         app:layout_constraintTop_toBottomOf="@+id/sb_song_below"
         app:layout_constraintVertical_bias="0.2" />
 
+
     <TextView
         android:text="00:00"
         android:textColor="@color/gray"
@@ -120,13 +121,30 @@
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp2_song_music"
-        android:layout_width="392dp"
+        android:id="@+id/vp2_song_main"
+        android:layout_width="400dp"
         android:layout_height="587dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8">
+    </androidx.viewpager2.widget.ViewPager2>
+
+
+
+    <com.example.mycloudmusic.view.RoundBackgroundView
+        android:id="@+id/rbg_song_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:alpha="0.4"
+        android:layout_width="280dp"
+        android:layout_height="360dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"/>
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"

@@ -3,7 +3,7 @@ package com.example.mycloudmusic.userdata
 /**
  * 歌曲的歌词类
  */
-data class lyric(
+data class Lyric(
     val code: Int,
     val klyric: Klyric,
     val lrc: Lrc,

@@ -2,6 +2,9 @@ package com.example.mycloudmusic.userdata
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * 歌曲详情类
+ */
 data class SongDetail(
     val code: Int,
 //    val privileges: List<Privilege>,
