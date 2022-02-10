@@ -27,6 +27,7 @@ import android.media.MediaPlayer
 import android.view.View
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -35,6 +36,7 @@ import com.example.mycloudmusic.userdata.SongDetail
 import com.example.mycloudmusic.util.Player
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.mycloudmusic.adapter.FragmentPagerAdapter
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
@@ -50,6 +52,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mSeekBar: SeekBar
     private lateinit var mTvTitle : TextView
     private lateinit var mTvArtist : TextView
+    private lateinit var mViewPager2: ViewPager2
 
     private lateinit var mView : ConstraintLayout
     private lateinit var cookieList : List<String>
@@ -69,8 +72,21 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     lateinit var mDrawableNormal: Drawable
     lateinit var mDrawablePress: Drawable
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_song)
+        initView()
+        setClick()
+        initData()
+        getSongDetail()
+        getSongUrl()
+        initSeekBar()
+        initPage()
+    }
+
     override fun onClick(v: View?) {
         when (v) {
+            //播放按钮
             mIvPlay -> {
                 isPlay = if(isPlay){
                     //暂停
@@ -85,20 +101,44 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     true
                 }
             }
+            //ViewPager2切换
+            mViewPager2->{
+                Log.d("ViewPager2:","be clicked")
+                val currentItem =
+                    when(mViewPager2.currentItem){
+                        0 -> 1
+                        1 -> 0
+                        else -> 0
+                    }
+                //取消动画效果
+                mViewPager2.setCurrentItem(currentItem,false)
+            }
+
         }
 
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_song)
-        initView()
-        setClick()
-        initData()
-        getSongDetail()
-        getSongUrl()
-        initSeekBar()
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun initView(){
+        mIvPlay = findViewById(R.id.iv_song_play)
+        mIvPlayLast = findViewById(R.id.iv_song_playLast)
+        mIvPlayNext = findViewById(R.id.iv_song_playNext)
+        mTvTimeLeft = findViewById(R.id.tv_songTime_left)
+        mTvTimeRight = findViewById(R.id.tv_songTime_right)
+        mSeekBar = findViewById(R.id.sb_song_below)
+        mTvTitle = findViewById(R.id.tv_song_titleName)
+        mTvArtist = findViewById(R.id.tv_song_artistName)
+        mView = findViewById(R.id.Layout_song_view)
+        mViewPager2 = findViewById(R.id.vp2_song_music)
+        mPlayer =  Player(mSeekBar)
+
+        mBound = mSeekBar.thumb.bounds
+        mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
+        mDrawableNormal = resources.getDrawable(R.drawable.ic_seekbar_thumb_normal,null)
+        mDrawableNormal.bounds = mBound
+        mDrawablePress.bounds = mBound
+
     }
 
     /**
@@ -106,6 +146,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      */
     private fun setClick(){
         mIvPlay.setOnClickListener(this)
+        mViewPager2.setOnClickListener(this)
     }
 
     /**
@@ -128,8 +169,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         val url = mSongDetail.songs[0].al.picUrl
         Log.d("picUrl",url)
 
-
-        //自定义target
+        //自定义Glide的target
         val customTarget: CustomTarget<Drawable?> = object : CustomTarget<Drawable?>(1000,1000) {
             override fun onResourceReady(
                 resource: Drawable,
@@ -139,14 +179,24 @@ class SongActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {
-
             }
         }
-                //加载背景图
-                Glide.with(this)
-                    .load(url)
-                    .transform(BlurTransformation(25,12))
-                    .into(customTarget)
+
+        //加载背景图
+        Glide.with(this)
+            .load(url)
+            .transform(BlurTransformation(25,12))
+            .into(customTarget)
+    }
+
+    /**
+     * 初始化ViewPager2的设置
+     */
+    private fun initPage(){
+        mViewPager2.adapter = FragmentPagerAdapter(this)
+        mViewPager2.offscreenPageLimit = 2
+        mViewPager2.isUserInputEnabled = false
+        mViewPager2.setCurrentItem(1,false)
 
     }
 
@@ -220,28 +270,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
 
         Log.d("SongTime", sec)
             "${min}.${sec}".also { return it }
-    }
-
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun initView(){
-        mIvPlay = findViewById(R.id.iv_song_play)
-        mIvPlayLast = findViewById(R.id.iv_song_playLast)
-        mIvPlayNext = findViewById(R.id.iv_song_playNext)
-        mTvTimeLeft = findViewById(R.id.tv_songTime_left)
-        mTvTimeRight = findViewById(R.id.tv_songTime_right)
-        mSeekBar = findViewById(R.id.sb_song_below)
-        mTvTitle = findViewById(R.id.tv_song_titleName)
-        mTvArtist = findViewById(R.id.tv_song_artistName)
-        mView = findViewById(R.id.Layout_song_view)
-        mPlayer =  Player(mSeekBar)
-
-        mBound = mSeekBar.thumb.bounds
-        mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
-        mDrawableNormal = resources.getDrawable(R.drawable.ic_seekbar_thumb_normal,null)
-        mDrawableNormal.bounds = mBound
-        mDrawablePress.bounds = mBound
-
     }
 
     /**
