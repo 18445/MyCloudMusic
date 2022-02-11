@@ -6,6 +6,7 @@ package com.example.mycloudmusic.userdata
  */
 data class UserSong (
 //    val userSongs : List<OneSong>
+    //歌单中位置-歌曲
     val userSongs : Map<Int,OneSong>
 )
 

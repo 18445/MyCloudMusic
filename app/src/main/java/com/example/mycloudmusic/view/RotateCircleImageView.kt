@@ -11,10 +11,18 @@ import com.example.mycloudmusic.R
 import com.example.mycloudmusic.util.dpToPx
 import android.graphics.PorterDuffXfermode
 import android.graphics.Bitmap
+import android.util.SparseArray
 import android.view.animation.DecelerateInterpolator
+import com.example.mycloudmusic.base.BaseFragment
 
 
 class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(context, attrs) {
+
+    companion object{
+        val views: SparseArray<RotateCircleImageView> = SparseArray()
+        val index : Int = 0
+    }
+
     var image:Bitmap? = null
     lateinit var tempImage: Bitmap
 
@@ -39,6 +47,7 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
 
     init {
         initData()
+        views.put(index,this)
     }
 
     @SuppressLint("DrawAllocation")
@@ -130,7 +139,7 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
         }
         //设置混合模式
         bitmapPaint.xfermode = pdf
-        //旋转画布
+        //旋转画布k
         if (rotateDirection == 0) {
             canvas.rotate(rotate, (width / 2).toFloat(), (width / 2).toFloat())//顺时针
         } else {
@@ -161,7 +170,7 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
         //黑色边框
         blackWidth = typedArray.getDimensionPixelOffset(R.styleable.
         RotateCircleImageView_circle_back_width,
-            dpToPx(context, 100f))
+            dpToPx(context, 50f))
         //选择角度
         rotateAngle = typedArray.getFloat(R.styleable.RotateCircleImageView_rotate_sd, 0.8f)
         rotateX = rotateAngle
@@ -174,6 +183,7 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
 
     fun startRotate() { //开始旋转
         if (!isRotate) {
+            rotateAngle = rotateX
             isRotate = true
             invalidate()
         }
@@ -181,7 +191,7 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
 
     fun stopRotate() { //暂停旋转
         val valueAnimator = ValueAnimator.ofFloat(rotateAngle, 0F)
-        valueAnimator.duration = 500
+        valueAnimator.duration = 2500
         valueAnimator.interpolator = DecelerateInterpolator()
         valueAnimator.start()
         valueAnimator.addUpdateListener {
@@ -189,8 +199,7 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
             invalidate()
         }
         handler.postDelayed({
-            rotateAngle = rotateX
             isRotate = false
-        }, 500)
+        }, 2500)
     }
 }

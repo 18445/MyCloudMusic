@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -61,7 +63,14 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
         cookieList = mSongModel.cookieList
         initOneSong()
         initView()
-
+        Handler(Looper.myLooper()!!).postDelayed(
+            {
+//                val mPair = Pair(mPosition.toString(),mCurrentUserSong)
+                mSongModel.userSongs[mPosition.toString()] = mCurrentUserSong
+                Log.d("MyOneSong",mCurrentUserSong.toString())
+                Log.d("model map","has plus ${mSongModel.userSongs.toString()}}")}
+        ,2000
+        )
     }
 
     private fun initView(){
@@ -94,6 +103,10 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
             mRDisk.invalidate()
             mSongModel.currentDisk = SoftReference(mRDisk)
             sendAnimation()
+            mRDisk.stopRotate()
+            Handler(Looper.myLooper()!!).postDelayed({
+                mRDisk.startRotate()
+            },3500)
             Log.d("weak reference",mSongModel.currentDisk.toString())
         }
 
@@ -118,10 +131,10 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
         initSongUrl(id)
         initSongLyric(id)
         initSongDetail(id)
-        mCurrentUserSong.lyric = mSongLyric
-        mCurrentUserSong.song = mSong
-        mCurrentUserSong.songUrl = mSongUrl
-        Log.d("MyOneSong",mCurrentUserSong.toString())
+//        mCurrentUserSong.lyric = mSongLyric
+//        mCurrentUserSong.song = mSong
+//        mCurrentUserSong.songUrl = mSongUrl
+
     }
 
     private fun initSongDetail(id:String) {
@@ -151,7 +164,9 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
                 val mGson = Gson()
                 val mSongDetail  = mGson.fromJson(userData, SongDetail::class.java)
                 mSong = mSongDetail.songs[0]
-                Log.d("SongDetail",mSongDetail.toString())
+                mCurrentUserSong.song = mSong
+//                Log.d("SongDetail",mSongDetail.toString())
+//                Log.d("MyOneSong",mCurrentUserSong.toString())
                 requireActivity().runOnUiThread {
                     updateUi()
                 }
@@ -186,7 +201,9 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
                 val userData = response.body?.string()
                 val mGson = Gson()
                 mSongLyric  = mGson.fromJson(userData, Lyric::class.java)
-                Log.d("temp song item",mSongLyric.toString())
+                mCurrentUserSong.lyric = mSongLyric
+//                Log.d("MyOneSong",mCurrentUserSong.toString())
+//                Log.d("temp song item",mSongLyric.toString())
             }
         })
 
@@ -219,7 +236,9 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
                 val userData = response.body?.string()
                 val mGson = Gson()
                 mSongUrl  = mGson.fromJson(userData, SongUrl::class.java)
-                Log.d("SongUrl",mSongUrl.toString())
+                mCurrentUserSong.songUrl = mSongUrl
+//                Log.d("MyOneSong",mCurrentUserSong.toString())
+//                Log.d("SongUrl",mSongUrl.toString())
             }
         })
     }

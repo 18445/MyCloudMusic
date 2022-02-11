@@ -14,7 +14,7 @@ class FragmentPagerAdapter (fragmentActivity: FragmentActivity,mPosition:Int,id:
 
     init {
         fragments.put(PAGE_DISK, SongDiskFragment(mPosition,id))
-        fragments.put(PAGE_LYRIC, SongLyricFragment())
+        fragments.put(PAGE_LYRIC, SongLyricFragment(mPosition))
     }
 
     override fun createFragment(position: Int): Fragment {

@@ -31,6 +31,7 @@ import com.example.mycloudmusic.util.Player
 import com.bumptech.glide.request.transition.Transition
 import com.example.mycloudmusic.adapter.FragmentPagerOuterAdapter
 import com.example.mycloudmusic.userdata.*
+import com.example.mycloudmusic.view.RotateCircleImageView
 import com.example.mycloudmusic.view.RoundBackgroundView
 import com.example.mycloudmusic.viewmodel.SongViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -104,9 +105,10 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     mPlayer.pause()
                     mIvPlay.setImageResource(R.drawable.ic_song_play)
                     Log.d("mStop circle",mStart.toString())
-                    if(mStop!=null){
-                        mStop
-                    }
+                    RotateCircleImageView.views[0].stopRotate()
+//                    if(mStop!=null){
+//                        mStop
+//                    }
 //                    if(songViewModel.currentDisk != null){
 //                        val currentDisk = songViewModel.currentDisk
 //                        currentDisk!!.get()?.stopRotate()
@@ -119,9 +121,10 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     mIvPlay.setImageResource(R.drawable.ic_song_pause)
 //                    Log.d("music player","is playing")
                     Log.d("mStop circle",mStop.toString())
-                    if(mStart!=null){
-                        mStart
-                    }
+                    RotateCircleImageView.views[0].startRotate()
+//                    if(mStart!=null){
+//                        mStart
+//                    }
 //                    if(songViewModel.currentDisk != null){
 //                        val currentDisk = songViewModel.currentDisk
 //                        currentDisk!!.get()?.startRotate()
@@ -148,8 +151,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mBackground = findViewById(R.id.rbg_song_bottom)
         mVp2Outer = findViewById(R.id.vp2_song_main)
         mPlayer =  Player(mSeekBar)
-
-
 
         mBound = mSeekBar.thumb.bounds
         mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
@@ -530,9 +531,13 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         val tempSongLyric = getAllSongLyric(ids[mPosition].id)
         val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
 
-        userSongList[mPosition] = tempOneSong
-
-        songViewModel.userSongs = UserSong(userSongList)
+        //在歌单中的位置
+//        userSongList[mPosition] = tempOneSong
+//
+//        val userOneSong= UserSong(userSongList)
+//        val mPair = Pair(mPosition,userOneSong)
+//        songViewModel.userSongs.plus(mPair)
+//        songViewModel.userSongs = userOneSong
         Log.d("SongViewModelData",songViewModel.userSongs.toString())
     }
 
