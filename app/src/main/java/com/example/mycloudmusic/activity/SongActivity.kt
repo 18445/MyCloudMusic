@@ -52,6 +52,8 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mIvPlay:ImageView
     private lateinit var mSeekBar: SeekBar
 
+    private var mStart : (()->Unit) ?= null
+    private var mStop : (()->Unit) ? = null
     private lateinit var songViewModel : SongViewModel
     private lateinit var cookieList : List<String>
     private lateinit var mListDetail : ListDetail
@@ -101,12 +103,30 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     //暂停
                     mPlayer.pause()
                     mIvPlay.setImageResource(R.drawable.ic_song_play)
+                    Log.d("mStop circle",mStart.toString())
+                    if(mStop!=null){
+                        mStop
+                    }
+//                    if(songViewModel.currentDisk != null){
+//                        val currentDisk = songViewModel.currentDisk
+//                        currentDisk!!.get()?.stopRotate()
+//                        Log.d("weak reference",currentDisk.get().toString())
+//                    }
                     false
                 }else{
                     //播放
                     mPlayer.play()
                     mIvPlay.setImageResource(R.drawable.ic_song_pause)
-                    Log.d("music player","is playing")
+//                    Log.d("music player","is playing")
+                    Log.d("mStop circle",mStop.toString())
+                    if(mStart!=null){
+                        mStart
+                    }
+//                    if(songViewModel.currentDisk != null){
+//                        val currentDisk = songViewModel.currentDisk
+//                        currentDisk!!.get()?.startRotate()
+//                        Log.d("weak reference",currentDisk.get().toString())
+//                    }
                     true
                 }
             }
@@ -246,7 +266,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         Log.d("url",mSongUrl.data[0].url)
         mediaPlayer.setDataSource(mSongUrl.data[0].url)
         mediaPlayer.prepare()
-
         mTime = mediaPlayer.duration
         Log.d("time",mTime.toString())
     }
@@ -487,7 +506,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         val length = if(15>=ids.size){ ids.size }else { 15 }
         //判断是否能将歌单里面的歌曲都存储下来
         val isOverSize = length < ids.size
-
 //        if(isOverSize){
 //            for(i in 0 until length){
 //                val tempUrl = getAllSongUrl(ids[i].id)
@@ -516,5 +534,10 @@ class SongActivity : BaseActivity(), View.OnClickListener {
 
         songViewModel.userSongs = UserSong(userSongList)
         Log.d("SongViewModelData",songViewModel.userSongs.toString())
+    }
+
+    fun getRotateDisk(diskStart:()->Unit,diskStop:()->Unit){
+        mStart = diskStart
+        mStop = diskStop
     }
 }

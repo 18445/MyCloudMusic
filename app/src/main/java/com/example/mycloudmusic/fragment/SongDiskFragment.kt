@@ -2,6 +2,7 @@ package com.example.mycloudmusic.fragment
 
 import android.animation.ObjectAnimator
 import android.content.ContentValues
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,16 +10,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.mycloudmusic.R
+import com.example.mycloudmusic.activity.SongActivity
 import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.userdata.*
 import com.example.mycloudmusic.util.LoggingInterceptor
+import com.example.mycloudmusic.view.RotateCircleImageView
 import com.example.mycloudmusic.viewmodel.SongViewModel
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
+import java.lang.ref.SoftReference
+import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
 /**
@@ -31,9 +39,9 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
     private var mSongLyric : Lyric? = null
     private var mSong : Song? = null
     private lateinit var mSongModel : SongViewModel
-    private lateinit var mCircleAnimator : ObjectAnimator
     private lateinit var cookieList : List<String>
     private lateinit var mDisk : ImageView
+    private lateinit var mRDisk : RotateCircleImageView
     private val client = OkHttpClient.Builder()
         .readTimeout(10000, TimeUnit.MILLISECONDS)
         .writeTimeout(20000, TimeUnit.MILLISECONDS)
@@ -47,8 +55,6 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
         return inflater.inflate(R.layout.fragment_disk, container, false)
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mSongModel = ViewModelProvider(requireActivity()).get(SongViewModel::class.java)
@@ -60,7 +66,7 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
 
     private fun initView(){
         mDisk = requireView().findViewById(R.id.iv_song_disk)
-
+        mRDisk = requireView().findViewById(R.id.rciv_song_disk)
     }
 
     /**
@@ -73,15 +79,36 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
             }
         }
     }
+
+
+    //自定义Glide的target
+    private val customTarget: CustomTarget<Drawable?> = object : CustomTarget<Drawable?>() {
+        override fun onResourceReady(
+            resource: Drawable,
+            transition: Transition<in Drawable?>?
+        ) {
+
+            mRDisk.tempImage = resource.toBitmap(500,500)
+//            mRDisk.image = resource.toBitmap(250,250)
+            mRDisk.requestLayout()
+            mRDisk.invalidate()
+            mSongModel.currentDisk = SoftReference(mRDisk)
+            sendAnimation()
+            Log.d("weak reference",mSongModel.currentDisk.toString())
+        }
+
+        override fun onLoadCleared(placeholder: Drawable?) {
+        }
+    }
+
     /**
      * 加载图片
      */
     private fun loadImage(url:String){
         Glide.with(requireActivity())
             .load(url)
-            .centerCrop()
-            .into(mDisk)
-
+            .into(customTarget)
+        Log.d("Glide Url",url)
     }
 
     /**
@@ -198,13 +225,19 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
     }
 
 
-    /**
-     * 设置图片动画
-     */
-    private fun setAnimation(){
-
+    private fun startAnimation(){
+        mRDisk.startRotate()
+    }
+    private fun stopAnimation(){
+        mRDisk.stopRotate()
     }
 
-
-
+    fun sendAnimation(){
+        val mActivity = activity as SongActivity
+        mActivity.getRotateDisk({
+            startAnimation()
+        },{
+            stopAnimation()
+        })
+    }
 }

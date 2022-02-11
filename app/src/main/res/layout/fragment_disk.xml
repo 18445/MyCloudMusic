@@ -17,7 +17,20 @@
         android:layout_gravity="center"
         android:layout_marginTop="75dp"/>
 
+    <com.example.mycloudmusic.view.RotateCircleImageView
+        app:image="@drawable/ic_coopen_icon"
+        android:id="@+id/rciv_song_disk"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:circle_back_width="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:isRotate="false"
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+
     <com.google.android.material.imageview.ShapeableImageView
+        android:visibility="gone"
         android:id="@+id/iv_song_disk"
         android:layout_width="250dp"
         android:layout_height="250dp"

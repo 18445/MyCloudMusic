@@ -14,18 +14,15 @@ import android.graphics.Bitmap
 import android.view.animation.DecelerateInterpolator
 
 
-class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?, private val defStyleAttr:Int) : View(context, attrs) {
-    private lateinit var image: Bitmap
-    private lateinit var tempImage: Bitmap
+class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(context, attrs) {
+    var image:Bitmap? = null
+    lateinit var tempImage: Bitmap
 
     private lateinit var bitmap: Bitmap
     private lateinit var pdf: PorterDuffXfermode
     private lateinit var bitmapPaint: Paint
     private lateinit var canvas: Canvas
     private var isCreateBitmap = false
-
-
-
 
 
     private var blackWidth //黑色圆边框的宽度
@@ -35,6 +32,7 @@ class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?
     private var rotateAngle = 0.8f //每次旋转的角度(0.1f - 1f)
 
     private var rotateX  = 0f //控制选择的变量
+
     private var isRotate = false //控制是否旋转
 
     private lateinit var mPaint: Paint
@@ -67,20 +65,20 @@ class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?
         mHeight = if (heightMode == MeasureSpec.EXACTLY) {
             heightSize
         } else {
-            //控件等宽高
+        //控件等宽高
             paddingTop + paddingBottom + assumeWidth;
         }
 
         //控制图片大小并缩放
         image = if (tempImage.height < tempImage.width) {
-            //如果图片高度比宽度小，则强制拉伸
+        //如果图片高度比宽度小，则强制拉伸
             Bitmap.createScaledBitmap(
                 tempImage, assumeWidth - blackWidth,
                 assumeWidth - blackWidth, false
             )
         } else {
-            //缩放方法把图片缩放成指定大小（宽度等于预测的宽度，高度按比例缩放）
-            //该方法根据参数的宽高强制缩放图片，所以这里根据宽度算出缩放后的高度
+        //缩放方法把图片缩放成指定大小（宽度等于预测的宽度，高度按比例缩放）
+        //该方法根据参数的宽高强制缩放图片，所以这里根据宽度算出缩放后的高度
             Bitmap.createScaledBitmap(
                 tempImage, assumeWidth - blackWidth, (tempImage.height /
                         (tempImage.width.toFloat() / assumeWidth) - blackWidth).toInt(), false
@@ -98,13 +96,15 @@ class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?
             (width / 2).toFloat(), (width / 2).toFloat(), mPaint
         )
         //绘制图片
-        canvas?.drawBitmap(
-            getCircleBitmap(image, image.width, rotateAngle),
-            (width / 2 - image.width / 2).toFloat(),
-            (height / 2 - image.width / 2).toFloat(), mPaint
-        )
+        if(image != null){
+            canvas?.drawBitmap(
+                getCircleBitmap(image!!, image!!.width, rotateAngle),
+                (width / 2 - image!!.width / 2).toFloat(),
+                (height / 2 - image!!.width / 2).toFloat(), mPaint
+            )
+        }
         if (isRotate) {
-            //16毫秒后启动子线程刷新界面
+        //16毫秒后启动子线程刷新界面
             handler.postDelayed({
                 invalidate() //刷新界面
             }, 16)
@@ -112,7 +112,7 @@ class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?
     }
 
     private fun getCircleBitmap(image:Bitmap,width:Int,rotate:Float):Bitmap{
-        //只需要执行一次的代码
+            //只需要执行一次的代码
         if (!isCreateBitmap) {
             bitmapPaint = Paint()
             bitmapPaint.isAntiAlias = true
@@ -171,9 +171,9 @@ class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?
         isRotate = typedArray.getBoolean(R.styleable.RotateCircleImageView_isRotate, true)
         typedArray.recycle()
     }
+
     fun startRotate() { //开始旋转
         if (!isRotate) {
-
             isRotate = true
             invalidate()
         }
@@ -181,19 +181,16 @@ class RotateCircleImageView (context: Context?, private val attrs: AttributeSet?
 
     fun stopRotate() { //暂停旋转
         val valueAnimator = ValueAnimator.ofFloat(rotateAngle, 0F)
-        valueAnimator.duration = 1000
+        valueAnimator.duration = 500
         valueAnimator.interpolator = DecelerateInterpolator()
+        valueAnimator.start()
         valueAnimator.addUpdateListener {
             rotateAngle = it.animatedValue as Float
             invalidate()
         }
-        valueAnimator.start()
         handler.postDelayed({
             rotateAngle = rotateX
             isRotate = false
-        }, 1000)
-
+        }, 500)
     }
 }
-
-
