@@ -1,9 +1,12 @@
 package com.example.mycloudmusic.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.FrameLayout
 
@@ -12,6 +15,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import android.widget.ScrollView
+import com.example.mycloudmusic.util.dpToPx
+import kotlin.math.abs
+import kotlin.math.max
 
 
 class LyricView : ScrollView {
@@ -102,6 +108,7 @@ class LyricView : ScrollView {
             for (i in 0 until lyricTextList.size) {
                 val textView = TextView(context)
                 textView.textSize = 18f
+                textView.maxWidth = dpToPx(context,325f)
                 textView.text = lyricTextList[i]
                 //设置TextView的布局并居中显示
                 val params =
@@ -194,7 +201,7 @@ class LyricView : ScrollView {
         //滑动时，不往回弹，滑到哪就定位到哪
         setSelected(getIndex(t))
         if (listener != null) {
-            listener!!.onLyricScrollChange(getIndex(t), getIndex(oldt))
+            listener!!.onLyricScrollChange(getIndex(t-1), getIndex(oldt))
         }
     }
 
@@ -212,6 +219,62 @@ class LyricView : ScrollView {
         fun onLyricScrollChange(index: Int, oldindex: Int)
     }
 
+    override fun performClick(): Boolean {
+        return super.performClick()
+    }
 
+
+
+        var lastX = 0f
+        var lastY = 0f
+        var dX = 0f
+        var dY = 0f
+        var isTrue = true
+    //解决事件冲突
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+            val currentX = ev?.x
+            val currentY = ev?.y
+        when(ev?.action){
+            MotionEvent.ACTION_DOWN ->{
+            if (currentX != null) {
+                lastX = currentX
+            }
+            if (currentY != null) {
+                lastY = currentY
+            }
+                isTrue = true
+            Log.d("LyricMotionEvent","ACTION_DOWN")
+        }
+            MotionEvent.ACTION_MOVE ->{
+
+                if (currentX != null) {
+                    dX = abs(lastX - currentX)
+                }
+                if (currentY != null) {
+                    dY = abs(lastY - currentY)
+                }
+                Log.d("LyricMotionEvent","ACTION_MOVE dx:$dX dy:$dY")
+            }
+            MotionEvent.ACTION_UP -> {
+                Log.d("LyricMotionEvent","ACTION_UP")
+                if(dX<100||dY<50){
+                    isTrue = false
+                    Log.d("LyricEvent","return false")
+                    return false
+                }
+            }
+
+            else ->{
+
+            }
+        }
+
+//        return if(isTrue){
+           return super.onTouchEvent(ev)
+//        }else{
+//        return false
+//        }
+    }
 
 }

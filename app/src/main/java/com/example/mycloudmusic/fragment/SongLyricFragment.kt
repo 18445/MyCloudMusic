@@ -14,15 +14,17 @@ import com.example.mycloudmusic.userdata.OneSong
 import com.example.mycloudmusic.util.LyricUtil
 import com.example.mycloudmusic.viewmodel.SongViewModel
 import android.view.MotionEvent
+import android.view.View.OnTouchListener
 import androidx.core.view.isVisible
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.view.LyricView
+import kotlin.math.abs
 
 
 /**
  * 歌曲界面歌词类
  */
-class SongLyricFragment (private val mPosition:Int,private val setOnPlayer:(Long)->Unit): BaseFragment (){
+class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,private val setOnPlayer: (Long)->Double): BaseFragment (){
 
     var lyricTimeGap = ArrayList<Long>() //每两句歌词之间的间隔
     private lateinit var currentSong : OneSong
@@ -32,6 +34,7 @@ class SongLyricFragment (private val mPosition:Int,private val setOnPlayer:(Long
     private lateinit var lyricTime : List<String>
     private lateinit var lyricTimeList : List<Long>
     private lateinit var line : View
+    private var currentTime = 0.0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,8 +55,6 @@ class SongLyricFragment (private val mPosition:Int,private val setOnPlayer:(Long
             }
             ,4000
         )
-
-
     }
 
     /**
@@ -111,8 +112,6 @@ class SongLyricFragment (private val mPosition:Int,private val setOnPlayer:(Long
             Log.d("tempList",tempTime.toString())
             tempList.add(tempTime)
         }
-
-//        Log.d("tempList", tempList.toString())
         lyricTimeList = tempList
         setTimeGap()
         Log.d("lyricTimeList", lyricTimeList.toString())
@@ -129,26 +128,29 @@ class SongLyricFragment (private val mPosition:Int,private val setOnPlayer:(Long
 
     private fun setNextLyric(index : Int){
         //如果开始的位置和当前位置不一样
+        Log.d("setNextLyric","enter The Fun")
         if(index != lrcIndex){
+            Log.d("setNextLyric","resize the index:$index lrcIndex:$lrcIndex")
             lrcIndex = index
             view.removeCallbacks(runnable)
         }
         if(lrcIndex >= lyricTimeGap.size){
+            Log.d("setNextLyric","enter the post delay")
             view.postDelayed({
                 runnable
-                lrcIndex++
                 },lyricTimeGap[lrcIndex])
         }
-
     }
 
 
     private val runnable =  Runnable (){
+        Log.d("setNextLyric","enter the runnable $lrcIndex")
         view.scrollToIndex(lrcIndex)
+        lrcIndex++
         setNextLyric(lrcIndex+1)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     private fun initEvents() {
         view.setLyricText(lyricDetail as ArrayList<String>, lyricTimeList as ArrayList<Long>)
 
@@ -158,26 +160,65 @@ class SongLyricFragment (private val mPosition:Int,private val setOnPlayer:(Long
             override fun onLyricScrollChange(index: Int, oldindex: Int) {
                 lrcIndex = index
                 println("====$index======")
-                setOnPlayer(lyricTimeList[lrcIndex])
+                currentTime = setOnPlayer(lyricTimeList[lrcIndex+1])
                 setNextLyric(lrcIndex)
-                //滚动handle不能放在这，因为，这是滚动监听事件，滚动到下一次，handle又会发送一次消息，出现意想不到的效果
             }
         })
 
+
+
+
         //点击事件
-        view.setOnTouchListener { _, event ->
-            when (event.action) {
+        var lastX = 0f
+        var lastY = 0f
+        var dX = 0f
+        var dY = 0f
+        view.setOnTouchListener (){ _, ev ->
+            val currentX = ev?.x
+            val currentY = ev?.y
+            when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //按下手势
-                    line.isVisible = true
+                    if (currentX != null) {
+                        lastX = currentX
+                    }
+                    if (currentY != null) {
+                        lastY = currentY
+                    }
+                    Log.d("MotionEvent","ACTION_DOWN")
                 }
                 MotionEvent.ACTION_UP -> {
                     //收起手势
-                    line.isVisible = false
+
+                    if(dX < 50 || dY<20){
+                        click
+                    }
+
+                    if (line.isVisible){
+                        line.isVisible = false
+                    }
+                    view.performClick()
+                    Log.d("MotionEvent","ACTION_UP")
                 }
-                MotionEvent.ACTION_CANCEL -> {}
+                MotionEvent.ACTION_MOVE ->{
+                    //移动时
+                    line.isVisible = true
+                    Log.d("MotionEvent","ACTION_MOVE")
+                    if (currentX != null) {
+                        dX = abs(lastX - currentX)
+                    }
+                    if (currentY != null) {
+                        dY = abs(lastY - currentY)
+                    }
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    if (line.isVisible){
+                        line.isVisible = false
+                    }
+                }
             }
             false
         }
+
     }
 }

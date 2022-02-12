@@ -54,6 +54,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mIvPlay:ImageView
     private lateinit var mSeekBar: SeekBar
 
+
     private var mStart : (()->Unit) ?= null
     private var mStop : (()->Unit) ? = null
     private lateinit var songViewModel : SongViewModel
@@ -66,6 +67,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mBundle: Bundle
     private lateinit var mTrack:Track
     private lateinit var mId:String
+    private var currentTime : Double = 0.0
     private val mGson = Gson()
     private var mPosition = -1
     private var isPlay = false
@@ -241,7 +243,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                 if(mTime != 0 ){
                     val percent : Double = (progress.toDouble()/100000)//百分比
                     Log.d("bar change",percent.toString())
-                    val currentTime = mTime * percent//到达进度条的时间（ms）
+                    currentTime = mTime * percent//到达进度条的时间（ms）
                     mSeekTime = currentTime.toInt()
                     Log.d("bar change",currentTime.toString())
                     val leftTime = setTime(currentTime.toInt())
@@ -267,10 +269,11 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 音乐播放器
+     * 音乐播放器的回调函数
      */
-    private val setOnPlayer : (Long)->Unit = {
+    private val setOnPlayer : (Long)->Double = {
         mPlayer.mediaPlayer?.seekTo(it.toInt())
+        currentTime
     }
 
     /**

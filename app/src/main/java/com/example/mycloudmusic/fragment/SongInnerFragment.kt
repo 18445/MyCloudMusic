@@ -3,6 +3,7 @@ package com.example.mycloudmusic.fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
@@ -15,10 +16,12 @@ import com.example.mycloudmusic.base.BaseFragment
  * 在外层Viewpager中显示的fragment
  * 里面镶嵌一个viewpager
  * mPosition:传入页面的位置
+ * setOnPlayer : 进度条相关的设置
  * isVisibility : 背景是否可见
  * isAllowed:判断是否运行滑动，如果是在歌词界面就不允许滑动
  */
-class SongInnerFragment(private val mPosition: Int,private val id:String,private val setOnPlayer:(Long)->Unit,private val isVisibility : (Int) -> Unit,private val isAllowedMove :((Int) -> Unit)) : BaseFragment(),View.OnClickListener{
+class SongInnerFragment(private val mPosition: Int,private val id:String,private val setOnPlayer: (Long)->Double
+                        ,private val isVisibility : (Int) -> Unit,private val isAllowedMove :((Int) -> Unit)) : BaseFragment(),View.OnClickListener{
     private lateinit var mVp2Inner: ViewPager2
 
     override fun onCreateView(
@@ -41,7 +44,7 @@ class SongInnerFragment(private val mPosition: Int,private val id:String,private
     }
 
     private fun initPage() {
-        mVp2Inner.adapter = FragmentPagerAdapter(requireActivity(),mPosition,id, setOnPlayer )
+        mVp2Inner.adapter = FragmentPagerAdapter(requireActivity(),mPosition,id,click, setOnPlayer )
         mVp2Inner.offscreenPageLimit = 2
         mVp2Inner.isUserInputEnabled = false
         mVp2Inner.setCurrentItem(0,false)
@@ -77,8 +80,13 @@ class SongInnerFragment(private val mPosition: Int,private val id:String,private
     private fun setClick() {
         mVp2Inner.setOnClickListener(this)
         //长按事件屏蔽单击事件
+        //被长按事件消费
         mVp2Inner.setOnLongClickListener {
             true
         }
+    }
+
+    private val click: ()->Unit = {
+        mVp2Inner.performClick()
     }
 }
