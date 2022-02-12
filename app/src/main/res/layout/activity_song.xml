@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="393dp"
-        android:layout_height="79dp"
+        android:layout_height="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -123,7 +123,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp2_song_main"
         android:layout_width="400dp"
-        android:layout_height="587dp"
+        android:layout_height="555dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -138,7 +138,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:alpha="0.5"
+        android:alpha="0.4"
         android:layout_width="280dp"
         android:layout_height="360dp"
         android:layout_gravity="center"

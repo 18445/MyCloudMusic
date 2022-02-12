@@ -16,7 +16,19 @@ import android.view.animation.DecelerateInterpolator
 import com.example.mycloudmusic.base.BaseFragment
 
 
-class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(context, attrs) {
+class RotateCircleImageView : View {
+    constructor(context: Context?) : super(context) {
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+    }
 
     companion object{
         val views: SparseArray<RotateCircleImageView> = SparseArray()
@@ -166,7 +178,8 @@ class RotateCircleImageView (context: Context?, attrs: AttributeSet?) : View(con
         //ImageView图片
         tempImage = BitmapFactory.decodeResource(
             resources, typedArray.getResourceId(
-            R.styleable.RotateCircleImageView_image, R.mipmap.ic_launcher))
+            R.styleable.RotateCircleImageView_image, R.drawable.ic_coopen_icon
+            ))
         //黑色边框
         blackWidth = typedArray.getDimensionPixelOffset(R.styleable.
         RotateCircleImageView_circle_back_width,

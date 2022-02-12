@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.example.mycloudmusic.view.RoundBackgroundView
+        android:visibility="gone"
         android:id="@+id/rbg_song_bottom"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +21,8 @@
     <com.example.mycloudmusic.view.RotateCircleImageView
         app:image="@drawable/ic_coopen_icon"
         android:id="@+id/rciv_song_disk"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="245dp"
+        android:layout_height="245dp"
         app:circle_back_width="50dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"

@@ -22,6 +22,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -88,6 +89,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         initView()
         initData()
         initPage()
+        mBackground.elevation = -1f
         setClick()
         getSongDetail()
         getSongUrl()
@@ -152,6 +154,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mVp2Outer = findViewById(R.id.vp2_song_main)
         mPlayer =  Player(mSeekBar)
 
+
         mBound = mSeekBar.thumb.bounds
         mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
         mDrawableNormal = resources.getDrawable(R.drawable.ic_seekbar_thumb_normal,null)
@@ -207,13 +210,17 @@ class SongActivity : BaseActivity(), View.OnClickListener {
             .into(customTarget)
     }
 
+    private val isVisibility :( Int )-> Unit = {
+        mBackground.isVisible = (it == 0)
+    }
+
     /**
      * 初始化ViewPager2的设置
      * mPosition 在歌单中的位置
      * id 歌曲id
      */
     private fun initPage(){
-        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition ,mTrack.id){
+        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition ,mTrack.id,setOnPlayer,isVisibility){
             when(it){
                 0 ->{mVp2Outer.isUserInputEnabled = true}
                 1 ->{mVp2Outer.isUserInputEnabled = false}
@@ -257,6 +264,13 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                 }
             }
         })
+    }
+
+    /**
+     * 音乐播放器
+     */
+    private val setOnPlayer : (Long)->Unit = {
+        mPlayer.mediaPlayer?.seekTo(it.toInt())
     }
 
     /**

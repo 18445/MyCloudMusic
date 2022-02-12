@@ -8,13 +8,13 @@ import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.fragment.SongDiskFragment
 import com.example.mycloudmusic.fragment.SongLyricFragment
 
-class FragmentPagerAdapter (fragmentActivity: FragmentActivity,mPosition:Int,id:String) : FragmentStateAdapter(fragmentActivity) {
+class FragmentPagerAdapter (fragmentActivity: FragmentActivity,mPosition:Int,id:String,setOnPlayer:(Long)->Unit) : FragmentStateAdapter(fragmentActivity) {
 
     private val fragments: SparseArray<BaseFragment> = SparseArray()
 
     init {
         fragments.put(PAGE_DISK, SongDiskFragment(mPosition,id))
-        fragments.put(PAGE_LYRIC, SongLyricFragment(mPosition))
+        fragments.put(PAGE_LYRIC, SongLyricFragment(mPosition,setOnPlayer))
     }
 
     override fun createFragment(position: Int): Fragment {
