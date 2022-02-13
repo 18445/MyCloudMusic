@@ -219,10 +219,11 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     /**
      * 初始化ViewPager2的设置
      * mPosition 在歌单中的位置
-     * id 歌曲id
+     * id 歌曲id+
      */
     private fun initPage(){
-        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition ,mTrack.id,setOnPlayer,isVisibility){
+        val ids = mListDetail.SongList.trackIds
+        mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition , ids ,setOnPlayer,isVisibility){
             when(it){
                 0 ->{mVp2Outer.isUserInputEnabled = true}
                 1 ->{mVp2Outer.isUserInputEnabled = false}

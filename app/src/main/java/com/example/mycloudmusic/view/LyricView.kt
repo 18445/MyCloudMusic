@@ -32,12 +32,13 @@ class LyricView : ScrollView {
     var lyricTimeList = ArrayList<Long>() //每行歌词所对应的时间集合
     var lyricTimeGap = ArrayList<Long>() //每两句歌词之间的间隔
     var lyricItemHeights: ArrayList<Int>? = null //每行歌词TextView所要显示的高度
+
     //控件高度
     var mHeight = 0
     //控件宽度
     var mWidth = 0
-
-    var prevSelected = 0 //前一个选择的歌词所在的item
+    //前一个选择的歌词所在的item
+    var prevSelected = 0
 
     constructor(context: Context?) : super(context) {
         initView()
@@ -229,7 +230,7 @@ class LyricView : ScrollView {
         var lastY = 0f
         var dX = 0f
         var dY = 0f
-        var isTrue = true
+//        var isTrue = true
     //解决事件冲突
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
@@ -243,7 +244,7 @@ class LyricView : ScrollView {
             if (currentY != null) {
                 lastY = currentY
             }
-                isTrue = true
+//                isTrue = true
             Log.d("LyricMotionEvent","ACTION_DOWN")
         }
             MotionEvent.ACTION_MOVE ->{
@@ -254,27 +255,27 @@ class LyricView : ScrollView {
                 if (currentY != null) {
                     dY = abs(lastY - currentY)
                 }
+//                if(dX<25||dY<50){
+//                    isTrue = false
+                    Log.d("LyricEvent","is true false")
+//                }else{
+//                    isTrue = true
+//                }
                 Log.d("LyricMotionEvent","ACTION_MOVE dx:$dX dy:$dY")
             }
             MotionEvent.ACTION_UP -> {
                 Log.d("LyricMotionEvent","ACTION_UP")
-                if(dX<100||dY<50){
-                    isTrue = false
+                if(dX<25||dY<50){
+//                    isTrue = false
                     Log.d("LyricEvent","return false")
-                    return false
+//                    return false
                 }
             }
-
             else ->{
-
             }
         }
-
-//        return if(isTrue){
-           return super.onTouchEvent(ev)
-//        }else{
-//        return false
-//        }
+    //return false/true 都无法进行移动的方法
+        return super.onTouchEvent(ev)
     }
 
 }

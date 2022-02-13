@@ -21,11 +21,8 @@ import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-
-
-
-
-
+import android.app.ProgressDialog
+import android.os.Handler
 
 
 lateinit var MYUSER: User
@@ -55,6 +52,8 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_home)
+
+        initProgress()
         initNet()
         initUser(MYUSER)
         initView()
@@ -73,6 +72,22 @@ class HomeActivity : BaseActivity() {
 //        initRecommendSong()
         super.onCreate(savedInstanceState)
     }
+
+    /**
+     * Loading加载框
+     */
+    private fun initProgress(){
+        val waitingDialog = ProgressDialog(this@HomeActivity)
+        waitingDialog.setTitle("网络正在加载")
+        waitingDialog.setMessage("等待中...")
+        waitingDialog.isIndeterminate = true
+        waitingDialog.setCancelable(false)
+        waitingDialog.show()
+        Handler(Looper.myLooper()!!).postDelayed({
+             waitingDialog.dismiss()
+        },3500)
+    }
+
 
 //    /**
 //     * Cookie配置

@@ -6,18 +6,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.fragment.SongInnerFragment
+import com.example.mycloudmusic.userdata.TrackId
 
-class FragmentPagerOuterAdapter(fragmentActivity: FragmentActivity, mPosition : Int,id:String,setOnPlayer: (Long)->Double, isVisibility : (Int) -> Unit,isAllowedMove :((Int) -> Unit)) : FragmentStateAdapter(fragmentActivity) {
+class FragmentPagerOuterAdapter(fragmentActivity: FragmentActivity, mPosition : Int,ids:List<TrackId>,setOnPlayer: (Long)->Double, isVisibility : (Int) -> Unit,isAllowedMove :((Int) -> Unit)) : FragmentStateAdapter(fragmentActivity) {
 
     private val fragments: SparseArray<BaseFragment> = SparseArray()
 
     init {
 
-        fragments.put(PAGE_LAST, SongInnerFragment(mPosition,id,setOnPlayer,isVisibility,isAllowedMove))
-        fragments.put(PAGE_THIS, SongInnerFragment(mPosition,id,setOnPlayer,isVisibility,isAllowedMove))
-        fragments.put(PAGE_NEXT, SongInnerFragment(mPosition,id,setOnPlayer,isVisibility,isAllowedMove))
-//        fragments.put(PAGE_THIS, SongInnerFragment(mPosition+1,isAllowedMove))
-//        fragments.put(PAGE_NEXT, SongInnerFragment(mPosition+2,isAllowedMove))
+        fragments.put(PAGE_LAST, SongInnerFragment(mPosition,ids[mPosition].id,setOnPlayer,isVisibility,isAllowedMove))
+        fragments.put(PAGE_THIS, SongInnerFragment(mPosition+1,ids[mPosition+1].id,setOnPlayer,isVisibility,isAllowedMove))
+        fragments.put(PAGE_NEXT, SongInnerFragment(mPosition+2,ids[mPosition+2].id,setOnPlayer,isVisibility,isAllowedMove))
 
     }
 

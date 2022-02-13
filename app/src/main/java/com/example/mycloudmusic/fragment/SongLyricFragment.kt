@@ -94,7 +94,6 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         for(i in lyricTime.indices){
             val line = lyricTime[i].split(":")
             Log.d("line",line.toString())
-
             if(line.size == 1){
                 break
             }
@@ -151,6 +150,7 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initEvents() {
         view.setLyricText(lyricDetail as ArrayList<String>, lyricTimeList as ArrayList<Long>)
 
@@ -186,18 +186,16 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
                         lastY = currentY
                     }
                     Log.d("MotionEvent","ACTION_DOWN")
-                }
-                MotionEvent.ACTION_UP -> {
-                    //收起手势
-
                     if(dX < 50 || dY<20){
                         click
                     }
-
+                }
+                MotionEvent.ACTION_UP -> {
+                    //收起手势
                     if (line.isVisible){
                         line.isVisible = false
                     }
-                    view.performClick()
+//                    view.performClick()
                     Log.d("MotionEvent","ACTION_UP")
                 }
                 MotionEvent.ACTION_MOVE ->{
