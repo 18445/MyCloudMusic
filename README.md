@@ -17,6 +17,7 @@
 
 点击歌曲进入到歌曲界面，Viewpager2嵌套ViewPager2，外层ViewPager2左右滑动实现歌曲切换功能，内层ViewPager2实现点击切换到歌词。内层的ViewPager2有两个fragment，光盘的fragment是一个自定义的view实现转圈效果，歌词的fragment是自定义ScrollView实现歌词的滑动效果。
 ## 界面展示
+(gif展现出来卡卡的，实际要稍微好一点)
 ![image](https://github.com/18445/MyCloudMusic/blob/master/image/open4.gif)
 ![image](https://github.com/18445/MyCloudMusic/blob/master/image/open3.gif)
 ![image](https://github.com/18445/MyCloudMusic/blob/master/image/open2.gif)
@@ -29,6 +30,6 @@
 
 ## 缺点反思
 //TODO
-
+（睡了睡了）
 ## 心得体会
 //TODO
