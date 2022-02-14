@@ -260,8 +260,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     initPageUi(position+mOffset)
                     mPlayer.stop()
                     mPlayer = Player(mSeekBar)
-//                    mPlayer.playUrl(mListDetail.SongList.tracks[selectedPosition].id)
-                    playWithUrl(mListDetail.SongList.tracks[selectedPosition].id)
+                    playWithUrl(mListDetail.SongList.tracks[position+mOffset].id)
                     Log.d("mPlayer now:",mPlayer.toString())
                 }
             })
@@ -629,7 +628,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         val tempSongLyric = getAllSongLyric(ids[mPosition].id)
         val tempOneSong = OneSong(tempDetail?.songs?.get(0),tempUrl,tempSongLyric)
 
-        //在歌单中的位置
+//在歌单中的位置
 //        userSongList[mPosition] = tempOneSong
 //
 //        val userOneSong= UserSong(userSongList)
@@ -644,4 +643,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mStart = diskStart
         mStop = diskStop
     }
+
+//    override fun finish() {
+//    }
 }

@@ -2,16 +2,20 @@ package com.example.mycloudmusic.activity
 
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.mycloudmusic.R
 import com.example.mycloudmusic.`interface`.RecyclerItemClickListener
 import com.example.mycloudmusic.adapter.SongListAdapter
@@ -22,6 +26,7 @@ import com.example.mycloudmusic.userdata.Playlist
 import com.example.mycloudmusic.userdata.UserPlaylist
 import com.example.mycloudmusic.util.LoggingInterceptor
 import com.google.gson.Gson
+import jp.wasabeef.glide.transformations.BlurTransformation
 import okhttp3.*
 import java.io.IOException
 import java.util.*
@@ -46,6 +51,7 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
     private lateinit var cookieList : List<String>
     private lateinit var mSongItems : List<SongItem>
     private lateinit var mCookie : String
+    private lateinit var mRelativeLayout: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +83,7 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
     }
 
     private fun initView(){
+        mRelativeLayout = findViewById(R.id.rl_playerList_top)
         mIvList = findViewById(R.id.iv_playerList_user)
         mTvListName = findViewById(R.id.tv_playerList_listName)
         mIvUsr = findViewById(R.id.siv_playerList_user)
@@ -192,6 +199,25 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(mIvUsr)
 
+
+        //自定义Glide的target
+        val customTarget: CustomTarget<Drawable?> = object : CustomTarget<Drawable?>(1000,500) {
+            override fun onResourceReady(
+                resource: Drawable,
+                transition: Transition<in Drawable?>?
+            ) {
+                mRelativeLayout.background = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+            }
+        }
+
+
+        Glide.with(this)
+            .load(songUrl)
+            .transform(BlurTransformation(25,12))
+            .into(customTarget)
 
         mTvListName.text = mCurrentUsr.name
         "${mCurrentUsr.creator.nickname} >".also { mTvUsrName.text = it }

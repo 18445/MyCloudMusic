@@ -53,7 +53,7 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
                 initViews()
                 initEvents()
             }
-            ,4000
+            ,3500
         )
     }
 
@@ -73,7 +73,6 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         lyricTime = LyricUtil(lyric).lyricTime()
         Log.d("lyricDetail",lyricDetail.toString())
         Log.d("lyricTime",lyricTime.toString())
-
     }
 
     /**
@@ -125,6 +124,11 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         line.isVisible = false
     }
 
+    /**
+     * 从index位置处开始歌曲的循环效果
+     * lrcIndex : 当前歌词所在的位置
+     * index : 期望歌词所在的位置
+     */
     private fun setNextLyric(index : Int){
         //如果开始的位置和当前位置不一样
         Log.d("setNextLyric","enter The Fun")
@@ -133,20 +137,23 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
             lrcIndex = index
             view.removeCallbacks(runnable)
         }
-        if(lrcIndex >= lyricTimeGap.size){
-            Log.d("setNextLyric","enter the post delay")
-            view.postDelayed({
-                runnable
-                },lyricTimeGap[lrcIndex])
+        if(lrcIndex < lyricTimeGap.size){
+            Log.d("setNextLyric","enterThePostDelay")
+            if(lyricTimeGap.size != 0 ){
+                view.postDelayed({
+                    Log.d("setNextLyric","enterTheRunnable")
+                    runnable
+                    },lyricTimeGap[lrcIndex])
+            }
         }
     }
 
 
     private val runnable =  Runnable (){
-        Log.d("setNextLyric","enter the runnable $lrcIndex")
+        Log.d("setNextLyric","entertherunnable $lrcIndex")
         view.scrollToIndex(lrcIndex)
         lrcIndex++
-        setNextLyric(lrcIndex+1)
+        setNextLyric(lrcIndex)
     }
 
 

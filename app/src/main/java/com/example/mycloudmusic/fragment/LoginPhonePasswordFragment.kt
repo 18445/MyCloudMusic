@@ -1,6 +1,7 @@
 package com.example.mycloudmusic.fragment
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -26,6 +27,15 @@ import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
+
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
 
 /**
  * 登录界面之手机-密码登录
@@ -144,9 +154,17 @@ class LoginPhonePasswordFragment : BaseFragment() {
         startActivity(intent)
         activity?.onBackPressed()
 //        requireActivity().finish()
+        hideInput()
         FinishActivityManager.manager!!.finishAllActivity()
     }
 
+    /**
+     * 隐藏键盘
+     */
+    private fun hideInput() {
+        val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
+    }
 
     /**
      * 调用登录方法获得用户数据

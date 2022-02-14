@@ -85,7 +85,7 @@ class HomeActivity : BaseActivity() {
         waitingDialog.show()
         Handler(Looper.myLooper()!!).postDelayed({
              waitingDialog.dismiss()
-        },3500)
+        },4500)
     }
 
 
