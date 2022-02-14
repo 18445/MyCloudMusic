@@ -16,3 +16,19 @@
 点击歌单转到歌单的详情界面，上方用Appbarlayout实现置顶功能，下面是NestedScrollView中套recycleview(本来网易云歌单界面中在上方歌单简介和下方歌曲列表中还有层 “收藏|评论|分享” 的界面，可以放在NestedScroolView中，但个人没有实现)
 
 点击歌曲进入到歌曲界面，Viewpager2嵌套ViewPager2，外层ViewPager2左右滑动实现歌曲切换功能，内层ViewPager2实现点击切换到歌词。内层的ViewPager2有两个fragment，光盘的fragment是一个自定义的view实现转圈效果，歌词的fragment是自定义ScrollView实现歌词的滑动效果。
+## 界面展示
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/open4.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/open3.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/open2.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/open1.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/home1.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/home3.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/disk3.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/disk2.gif)
+![image](https://github.com/18445/MyCloudMusic/blob/master/image/disk1.gif)
+
+## 缺点反思
+//TODO
+
+## 心得体会
+//TODO
