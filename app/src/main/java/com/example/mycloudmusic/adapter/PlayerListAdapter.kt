@@ -62,7 +62,7 @@ class PlayerListAdapter(private val mOnItemClickListener: RecyclerItemClickListe
 /**
  * 推荐歌单类
  */
-class PlayerListAdapter2(private val playerListItems : List<PlayerListItem>,private val context: Context) : RecyclerView.Adapter<PlayerListAdapter2.Holder>() {
+class PlayerListAdapter2(private val mOnItemClickListener: RecyclerItemClickListener?,private val playerListItems : List<PlayerListItem>,private val context: Context) : RecyclerView.Adapter<PlayerListAdapter2.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_playerlist_type_rv, parent, false)
@@ -77,6 +77,12 @@ class PlayerListAdapter2(private val playerListItems : List<PlayerListItem>,priv
             .into(holder.image)
         holder.title.text = currentItem.title
         holder.content.text = currentItem.content
+        //设置Item点击回调
+        mOnItemClickListener?.let {
+            holder.itemView.setOnClickListener {
+                mOnItemClickListener.onRecyclerViewItemClick(holder.itemView,position)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -93,7 +99,7 @@ class PlayerListAdapter2(private val playerListItems : List<PlayerListItem>,priv
 /**
  * 收藏歌单类
  */
-class PlayerListAdapter3(private val playerListItems : List<PlayerListItem>,private val context: Context) : RecyclerView.Adapter<PlayerListAdapter3.Holder>() {
+class PlayerListAdapter3(private val mOnItemClickListener: RecyclerItemClickListener?,private val playerListItems : List<PlayerListItem>,private val context: Context) : RecyclerView.Adapter<PlayerListAdapter3.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_playerlist_type_rv, parent, false)
@@ -108,6 +114,12 @@ class PlayerListAdapter3(private val playerListItems : List<PlayerListItem>,priv
             .into(holder.image)
         holder.title.text = currentItem.title
         holder.content.text = currentItem.content
+        //设置Item点击回调
+        mOnItemClickListener?.let {
+            holder.itemView.setOnClickListener {
+                mOnItemClickListener.onRecyclerViewItemClick(holder.itemView,position)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

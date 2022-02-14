@@ -172,9 +172,8 @@ class LoginPhonePasswordFragment : BaseFragment() {
     private fun getUser(userData:String){
         Log.d(ContentValues.TAG, " onResponse: $userData")
         val mGson = Gson()
-        val user:User = mGson.fromJson(userData, User::class.java)
-        Log.d("User:",user.toString())
-        MYUSER = user
+        MYUSER = mGson.fromJson(userData, User::class.java)
+//        Log.d("User:",user.toString())
     }
 
 }

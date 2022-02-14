@@ -70,10 +70,10 @@ class PlayerListActivity : BaseActivity(),RecyclerItemClickListener{
             //歌手名字
             var arName = ""
             for(n in mCurrentItem.ar.indices){
-                if(n != mCurrentItem.ar.size-1){
-                    arName += mCurrentItem.ar[n].name+"/"
+                arName += if(n != mCurrentItem.ar.size-1){
+                    mCurrentItem.ar[n].name+"/"
                 }else{
-                    arName += mCurrentItem.ar[n].name
+                    mCurrentItem.ar[n].name
                 }
             }
             val tempItem = SongItem(mCurrentItem.name,arName+" - "+mCurrentItem.al.name,(i+1).toString())

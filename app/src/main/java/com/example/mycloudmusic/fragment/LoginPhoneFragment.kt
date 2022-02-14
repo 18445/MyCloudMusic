@@ -3,6 +3,7 @@ package com.example.mycloudmusic.fragment
 
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -11,6 +12,7 @@ import com.example.mycloudmusic.base.BaseFragment
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -272,6 +274,7 @@ class LoginPhoneFragment : BaseFragment() {
         startActivity(intent)
         activity?.onBackPressed()
 //        activity?.finish()
+        hideInput()
         FinishActivityManager.manager!!.finishAllActivity()
     }
 
@@ -305,5 +308,13 @@ class LoginPhoneFragment : BaseFragment() {
                 MYUSER = (mGson.fromJson(userData,User::class.java)) //更新ViewModel中User数据
             }
         })
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    private fun hideInput() {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
     }
 }

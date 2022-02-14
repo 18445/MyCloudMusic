@@ -1,5 +1,6 @@
 package com.example.mycloudmusic.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.FixedPreloadSizeProvider
 import com.example.mycloudmusic.R
+import com.example.mycloudmusic.`interface`.RecyclerItemClickListener
+import com.example.mycloudmusic.activity.PlayerListActivity
 import com.example.mycloudmusic.adapter.PlayerListAdapter3
 import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.item.PlayerListItem
@@ -22,9 +25,9 @@ import com.example.mycloudmusic.viewmodel.MyViewModel
 /**
  * 收藏歌单项的Fragment
  */
-class CollectedPlayerListFragment : BaseFragment() {
-    private lateinit var mUserPlayerList : UserPlaylist
+class CollectedPlayerListFragment : BaseFragment() , RecyclerItemClickListener {
     private lateinit var userModel : MyViewModel
+    private lateinit var mUserPlayerList : UserPlaylist
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mPlayerList : List<PlayerListItem>
     private lateinit var UID:String
@@ -58,7 +61,7 @@ class CollectedPlayerListFragment : BaseFragment() {
         )
         mRecyclerView.addOnScrollListener(preload);
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mRecyclerView.adapter = context?.let { PlayerListAdapter3(mPlayerList, it) }
+        mRecyclerView.adapter = context?.let { PlayerListAdapter3(this,mPlayerList, it) }
 
         Log.d("mPlayerList",mPlayerList.toString())
     }
@@ -91,4 +94,22 @@ class CollectedPlayerListFragment : BaseFragment() {
         mRecyclerView = requireView().findViewById(R.id.rv_createdPlayerList)
         UID = userModel.getUser().profile.userId.toString()
     }
+    /**
+     * Item项的点击回调事件
+     * 设置点击跳转加载activity
+     * 完成歌单页面的加载
+     */
+    override fun onRecyclerViewItemClick(view: View, position: Int) {
+        Log.d("RecycleViewItemClick","${position}:$view be clicked")
+        //序列化利用bundle传递对象
+        val intent = Intent(context, PlayerListActivity::class.java)
+        val bundle = Bundle()
+        bundle.putParcelable("UserPlayerList",mUserPlayerList)
+        intent.putExtras(bundle)
+        intent.putExtra("id",UID)
+        intent.putExtra("position",position)
+        intent.putExtra("cookie",userModel.getUser().cookie)
+        startActivity(intent)
+    }
+
 }

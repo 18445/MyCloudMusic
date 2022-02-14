@@ -30,7 +30,6 @@ class LyricView : ScrollView {
     private var lyricItems = ArrayList<TextView>() //每项的歌词集合
     var lyricTextList = ArrayList<String>() //每行歌词文本集合
     var lyricTimeList = ArrayList<Long>() //每行歌词所对应的时间集合
-    var lyricTimeGap = ArrayList<Long>() //每两句歌词之间的间隔
     var lyricItemHeights: ArrayList<Int>? = null //每行歌词TextView所要显示的高度
 
     //控件高度
@@ -120,14 +119,18 @@ class LyricView : ScrollView {
                 val vto = textView.viewTreeObserver
                 vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
+                        //被测量后移除，否则会重复进行消耗资源
                         textView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        Log.d("lyricItemHeights[$i]",textView.height.toString())
                         lyricItemHeights!!.add(i, textView.height) //将高度添加到对应的item位置
+                        Log.d("lyricItemHeights[$i]",lyricItemHeights.toString())
                     }
                 })
                 lyricList!!.addView(textView)
                 lyricItems.add(i, textView)
             }
         }
+        Log.d("lyricItemHeights",lyricItemHeights.toString())
     }
 
     /**
@@ -145,6 +148,7 @@ class LyricView : ScrollView {
             }
             //加上index这行高度的一半
             sum += lyricItemHeights!![index] / 2
+            Log.d("scrollTo",sum.toString())
             scrollTo(0, sum)
         }
     }

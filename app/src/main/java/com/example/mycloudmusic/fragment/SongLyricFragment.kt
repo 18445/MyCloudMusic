@@ -17,6 +17,7 @@ import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import androidx.core.view.isVisible
 import com.example.mycloudmusic.R
+import com.example.mycloudmusic.util.asyncGet
 import com.example.mycloudmusic.view.LyricView
 import kotlin.math.abs
 
@@ -34,6 +35,8 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
     private lateinit var lyricTime : List<String>
     private lateinit var lyricTimeList : List<Long>
     private lateinit var line : View
+    private lateinit var view: LyricView
+    private var lrcIndex = 0
     private var currentTime = 0.0
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +52,8 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         mSongModel = ViewModelProvider(requireActivity()).get(SongViewModel::class.java)
         Handler(Looper.myLooper()!!).postDelayed(
             {   getLyric()
-                toTime()
                 initViews()
+                toTime()
                 initEvents()
             }
             ,3500
@@ -76,12 +79,13 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
     }
 
     /**
-     * 设置没有每一个歌词的间隔时间
+     * 设置每一个歌词的间隔时间
      */
     private fun setTimeGap(){
         for(i in 0 until lyricTimeList.size - 1){
             lyricTimeGap.add(lyricTimeList[i+1]-lyricTimeList[i])
         }
+        Log.d("lyricTimeGap",lyricTimeGap.toString())
     }
 
     /**
@@ -112,11 +116,12 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         }
         lyricTimeList = tempList
         setTimeGap()
+        setNextLyric(0)
+//        beginLyric()
         Log.d("lyricTimeList", lyricTimeList.toString())
     }
 
-    private lateinit var view: LyricView
-    private var lrcIndex = 0
+
 
     private fun initViews() {
         view = requireView().findViewById(R.id.lv_lyric_view)
@@ -131,37 +136,49 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
      */
     private fun setNextLyric(index : Int){
         //如果开始的位置和当前位置不一样
+        if (index < 0 ){
+            return
+        }
         Log.d("setNextLyric","enter The Fun")
         if(index != lrcIndex){
             Log.d("setNextLyric","resize the index:$index lrcIndex:$lrcIndex")
             lrcIndex = index
-            view.removeCallbacks(runnable)
+//            view.removeCallbacks(mRunnable)
         }
         if(lrcIndex < lyricTimeGap.size){
             Log.d("setNextLyric","enterThePostDelay")
             if(lyricTimeGap.size != 0 ){
                 view.postDelayed({
                     Log.d("setNextLyric","enterTheRunnable")
-                    runnable
+                    mRunnable
                     },lyricTimeGap[lrcIndex])
             }
         }
     }
 
-
-    private val runnable =  Runnable (){
+    private val mRunnable =  Runnable (){
         Log.d("setNextLyric","entertherunnable $lrcIndex")
         view.scrollToIndex(lrcIndex)
         lrcIndex++
         setNextLyric(lrcIndex)
     }
-
+//    private fun beginLyric(){
+//        Thread().run() {
+//            for(i in lyricTimeGap.indices){
+//                view.scrollToIndex(i)
+//                Thread.sleep(lyricTimeGap[i])
+//            }
+//        }
+//    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initEvents() {
         view.setLyricText(lyricDetail as ArrayList<String>, lyricTimeList as ArrayList<Long>)
-
-        setNextLyric(0)
+        Handler(Looper.myLooper()!!).postDelayed(
+            {
+                setNextLyric(0)}
+        ,5000
+        )
 
         view.setOnLyricScrollChangeListener(object : LyricView.OnLyricScrollChangeListener {
             override fun onLyricScrollChange(index: Int, oldindex: Int) {
@@ -171,9 +188,6 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
                 setNextLyric(lrcIndex)
             }
         })
-
-
-
 
         //点击事件
         var lastX = 0f

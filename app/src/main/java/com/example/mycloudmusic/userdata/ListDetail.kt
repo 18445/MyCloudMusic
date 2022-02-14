@@ -81,7 +81,7 @@ data class Track(
 @Parcelize
 data class SongList(
     val adType: Int,
-    val backgroundCoverId: Int,
+//    val backgroundCoverId: Int,
     val backgroundCoverUrl: String?,
     val cloudTrackCount: Int,
     val commentCount: Int,

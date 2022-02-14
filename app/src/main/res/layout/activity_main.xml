@@ -98,7 +98,7 @@
         android:id="@+id/cb_start_bottom"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:textColorHighlight="@color/blue"
+        android:textColorHighlight="@color/GhostWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline1"
         app:layout_constraintHorizontal_bias="0.462"
