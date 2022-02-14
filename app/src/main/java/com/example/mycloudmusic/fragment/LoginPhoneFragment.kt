@@ -6,6 +6,7 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.example.mycloudmusic.base.BaseFragment
@@ -206,7 +207,11 @@ class LoginPhoneFragment : BaseFragment() {
                 if(mLoginVerification.exist == 1){
                     getUser()
                     activity?.runOnUiThread {
-                        loginSuccess()
+                        Handler(Looper.myLooper()!!).postDelayed({
+                            loginSuccess()
+                        }
+                        ,1000)
+                        
                     }
                 }else{
                     activity?.runOnUiThread {
@@ -306,6 +311,7 @@ class LoginPhoneFragment : BaseFragment() {
                 Log.d(TAG, " onResponse: $userData")
                 val mGson = Gson()
                 MYUSER = (mGson.fromJson(userData,User::class.java)) //更新ViewModel中User数据
+                Log.d("getUser", MYUSER.toString())
             }
         })
     }
