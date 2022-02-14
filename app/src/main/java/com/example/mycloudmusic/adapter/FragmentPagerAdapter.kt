@@ -8,7 +8,8 @@ import com.example.mycloudmusic.base.BaseFragment
 import com.example.mycloudmusic.fragment.SongDiskFragment
 import com.example.mycloudmusic.fragment.SongLyricFragment
 
-class FragmentPagerAdapter (fragmentActivity: FragmentActivity,mPosition:Int,id:String,private val click:()->Unit,setOnPlayer: (Long)->Double) : FragmentStateAdapter(fragmentActivity) {
+class FragmentPagerAdapter (fragmentActivity: FragmentActivity, mPosition:Int, id:String,
+                            click:()->Unit, setOnPlayer: (Long)->Double) : FragmentStateAdapter(fragmentActivity) {
 
     private val fragments: SparseArray<BaseFragment> = SparseArray()
 

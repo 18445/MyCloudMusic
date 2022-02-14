@@ -55,7 +55,7 @@ class Player(private val skbProgress: SeekBar) : OnBufferingUpdateListener, OnCo
         try {
             mediaPlayer!!.reset()
             mediaPlayer!!.setDataSource(videoUrl)
-            mediaPlayer!!.prepare() //prepare之后自动播放
+            mediaPlayer!!.prepare() //prepare之后播放
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         } catch (e: IllegalStateException) {

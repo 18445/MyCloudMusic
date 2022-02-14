@@ -18,6 +18,8 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -36,6 +38,7 @@ import com.example.mycloudmusic.view.RotateCircleImageView
 import com.example.mycloudmusic.view.RoundBackgroundView
 import com.example.mycloudmusic.viewmodel.SongViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
+import kotlin.math.log
 
 
 /**
@@ -54,7 +57,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mIvPlay:ImageView
     private lateinit var mSeekBar: SeekBar
 
-
+    private var mOffset : Int = 0
     private var mStart : (()->Unit) ?= null
     private var mStop : (()->Unit) ? = null
     private lateinit var songViewModel : SongViewModel
@@ -72,6 +75,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
     private var mPosition = -1
     private var isPlay = false
     private var mTime = 0
+    private var selectedPosition = 0
 
     private val client = OkHttpClient.Builder()
         .readTimeout(10000, TimeUnit.MILLISECONDS)
@@ -91,7 +95,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         initView()
         initData()
         initPage()
-        mBackground.elevation = -1f
+
         setClick()
         getSongDetail()
         getSongUrl()
@@ -137,7 +141,18 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     true
                 }
             }
-
+            mIvPlayLast->{
+                if(selectedPosition-1>=0){
+                    mVp2Outer.currentItem = selectedPosition-1
+                    selectedPosition--
+                }
+            }
+            mIvPlayNext->{
+                if(selectedPosition+1<3){
+                    mVp2Outer.currentItem = selectedPosition+1
+                    selectedPosition++
+                }
+            }
         }
     }
 
@@ -156,6 +171,8 @@ class SongActivity : BaseActivity(), View.OnClickListener {
         mVp2Outer = findViewById(R.id.vp2_song_main)
         mPlayer =  Player(mSeekBar)
 
+        //背景置于底层
+        mBackground.elevation = -1f
 
         mBound = mSeekBar.thumb.bounds
         mDrawablePress = resources.getDrawable(R.drawable.ic_seekbar_thumb_pressed,null)
@@ -170,19 +187,21 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      */
     private fun setClick(){
         mIvPlay.setOnClickListener(this)
+        mIvPlayNext.setOnClickListener(this)
+        mIvPlayLast.setOnClickListener(this)
     }
 
     /**
      *完成歌曲界面的UI设置
      */
-    private fun initPageUi(){
-        val songName = mListDetail.SongList.tracks[mPosition].name
+    private fun initPageUi(selectedPosition : Int){
+        val songName = mListDetail.SongList.tracks[selectedPosition].name
         var songArtist = ""
-        for(n in mListDetail.SongList.tracks[mPosition].ar.indices){
-            songArtist += if(n != mListDetail.SongList.tracks[mPosition].ar.size-1){
-                mListDetail.SongList.tracks[mPosition].ar[n].name+"/"
+        for(n in mListDetail.SongList.tracks[selectedPosition].ar.indices){
+            songArtist += if(n != mListDetail.SongList.tracks[selectedPosition].ar.size-1){
+                mListDetail.SongList.tracks[selectedPosition].ar[n].name+"/"
             }else{
-                mListDetail.SongList.tracks[mPosition].ar[n].name
+                mListDetail.SongList.tracks[selectedPosition].ar[n].name
             }
         }
         //顶部TextView部分
@@ -222,6 +241,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
      * id 歌曲id+
      */
     private fun initPage(){
+        mOffset = mPosition//偏移量
         val ids = mListDetail.SongList.trackIds
         mVp2Outer.adapter = FragmentPagerOuterAdapter(this, mPosition , ids ,setOnPlayer,isVisibility){
             when(it){
@@ -231,7 +251,67 @@ class SongActivity : BaseActivity(), View.OnClickListener {
             }
         }
         mVp2Outer.offscreenPageLimit = 3
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            //页面切换监听
+            mVp2Outer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    selectedPosition = position
+                    initPageUi(position+mOffset)
+                    mPlayer.stop()
+                    mPlayer = Player(mSeekBar)
+//                    mPlayer.playUrl(mListDetail.SongList.tracks[selectedPosition].id)
+                    playWithUrl(mListDetail.SongList.tracks[selectedPosition].id)
+                    Log.d("mPlayer now:",mPlayer.toString())
+                }
+            })
+        },2000)
     }
+
+    /**
+     * 播放指定的url
+     */
+    private fun playWithUrl(id:String){
+        val requestBody = FormBody.Builder()
+            .add("id",id)
+            .add("br", 320000.toString())
+            .build()
+        val request = Request.Builder()
+            .url("https://netease-cloud-music-api-18445.vercel.app/song/url")
+            .apply {
+                val length = cookieList.count()
+                for(i in 0..length-5 step 1){
+                    addHeader("Cookie",cookieList[i]+";"+cookieList[i+3]+";"+"Secure;"+cookieList[i+2]+";")
+                }
+            }
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.d(ContentValues.TAG, "onFailure: ${e.message}")
+                Toast.makeText(this@SongActivity, "网络请求错误", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val userData = response.body?.string()
+                val mGson = Gson()
+                mSongUrl  = mGson.fromJson(userData,SongUrl::class.java)
+                Log.d("playerSet",mSongUrl.toString())
+                Log.d("playerSet","mPlayer.playUrl ${mSongUrl.data[0].url}")
+                getTime()
+                Log.d("playerSet","mPlayer.playUrl $mTime")
+                runOnUiThread {
+                    setTime(mTime).also { mTvTimeRight.text = it }
+                }
+                mPlayer.playUrl(mSongUrl.data[0].url)
+                mPlayer.play()
+            }
+        })
+    }
+
+
+
 
     /**
      *初始化进度条的操作
@@ -400,7 +480,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                 Log.d("SongDetail",mSongDetail.toString())
                 runOnUiThread {
                     //更新UI
-                    initPageUi()
+                    initPageUi(mPosition)
                 }
             }
         })
@@ -558,6 +638,7 @@ class SongActivity : BaseActivity(), View.OnClickListener {
 //        songViewModel.userSongs = userOneSong
         Log.d("SongViewModelData",songViewModel.userSongs.toString())
     }
+
 
     fun getRotateDisk(diskStart:()->Unit,diskStop:()->Unit){
         mStart = diskStart

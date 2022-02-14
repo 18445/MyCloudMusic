@@ -26,8 +26,6 @@ import androidx.viewpager2.widget.ViewPager2
 //    ) {
 //
 //    }
-//
-//
 //    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
 //        if (ev?.action == MotionEvent.ACTION_MOVE){
 //            return false
