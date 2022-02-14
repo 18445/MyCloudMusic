@@ -278,4 +278,5 @@ class LyricView : ScrollView {
         return super.onTouchEvent(ev)
     }
 
+
 }

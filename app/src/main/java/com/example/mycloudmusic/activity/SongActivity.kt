@@ -304,7 +304,6 @@ class SongActivity : BaseActivity(), View.OnClickListener {
                     setTime(mTime).also { mTvTimeRight.text = it }
                 }
                 mPlayer.playUrl(mSongUrl.data[0].url)
-                mPlayer.play()
             }
         })
     }
