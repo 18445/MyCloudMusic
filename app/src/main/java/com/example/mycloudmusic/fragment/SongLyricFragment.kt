@@ -134,6 +134,7 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
      * lrcIndex : 当前歌词所在的位置
      * index : 期望歌词所在的位置
      */
+    val handler = Handler(Looper.myLooper()!!)
     private fun setNextLyric(index : Int){
         //如果开始的位置和当前位置不一样
         if (index < 0 ){
@@ -148,7 +149,12 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         if(lrcIndex < lyricTimeGap.size){
             Log.d("setNextLyric","enterThePostDelay")
             if(lyricTimeGap.size != 0 ){
-                view.postDelayed({
+//                view.postDelayed({
+//                    Log.d("setNextLyric","enterTheRunnable")
+//                    mRunnable
+//                    },lyricTimeGap[lrcIndex])
+
+                handler.postDelayed({
                     Log.d("setNextLyric","enterTheRunnable")
                     mRunnable
                     },lyricTimeGap[lrcIndex])

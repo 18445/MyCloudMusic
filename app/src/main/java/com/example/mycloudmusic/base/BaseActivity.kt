@@ -54,7 +54,7 @@ open class BaseActivity: AppCompatActivity() {
         window.navigationBarColor = Color.TRANSPARENT
 
         //将Activity 中的Window 的背景图设置为空,解决Android Activity切换时出现白屏问题
-//        window.setBackgroundDrawable(null)
+        //window.setBackgroundDrawable(null)
 
         /**
          * 是否允许屏幕旋转

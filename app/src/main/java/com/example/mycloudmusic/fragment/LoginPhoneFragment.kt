@@ -34,11 +34,6 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
-
-
-
-
 /**
  * 登录界面之手机登录
  */
@@ -211,7 +206,6 @@ class LoginPhoneFragment : BaseFragment() {
                             loginSuccess()
                         }
                         ,1000)
-                        
                     }
                 }else{
                     activity?.runOnUiThread {
