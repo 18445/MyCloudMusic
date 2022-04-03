@@ -6,9 +6,10 @@
     duration：持续时间（ms）
     interpolator：插值器（可以引用自定义）
 -->
-<translate xmlns:android="http://schemas.android.com/apk/res/android"
+<translate
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:fromXDelta="0"
     android:toXDelta="15"
     android:duration="1000"
     android:interpolator="@anim/cycles"
-    />
+/>

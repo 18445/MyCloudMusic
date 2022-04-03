@@ -46,7 +46,6 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         return inflater.inflate(R.layout.fragment_lyric, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mSongModel = ViewModelProvider(requireActivity()).get(SongViewModel::class.java)
@@ -168,14 +167,6 @@ class SongLyricFragment (private val click:()->Unit,private val mPosition:Int,pr
         lrcIndex++
         setNextLyric(lrcIndex)
     }
-//    private fun beginLyric(){
-//        Thread().run() {
-//            for(i in lyricTimeGap.indices){
-//                view.scrollToIndex(i)
-//                Thread.sleep(lyricTimeGap[i])
-//            }
-//        }
-//    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initEvents() {

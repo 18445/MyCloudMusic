@@ -156,7 +156,9 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(ContentValues.TAG, "onFailure: ${e.message}")
+                Looper.prepare()
                 Toast.makeText(requireActivity(), "网络请求错误", Toast.LENGTH_SHORT).show()
+                Looper.loop()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -242,7 +244,6 @@ class SongDiskFragment(private val mPosition:Int,private val id:String) : BaseFr
             }
         })
     }
-
 
     private fun startAnimation(){
         mRDisk.startRotate()

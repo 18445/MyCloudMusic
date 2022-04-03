@@ -55,8 +55,6 @@ class LyricView : ScrollView {
         initView()
     }
 
-
-
     private fun initView() {
         rootView = LinearLayout(context)
         rootView!!.orientation = LinearLayout.VERTICAL
@@ -77,6 +75,7 @@ class LyricView : ScrollView {
      */
     private fun refreshRootView() {
         rootView!!.removeAllViews() //刷新，把之前包含的所有的view清除
+            //...
         //创建两个空白view
         val blank1 = LinearLayout(context)
         val blank2 = LinearLayout(context)
@@ -199,8 +198,6 @@ class LyricView : ScrollView {
         refreshLyricList()
     }
 
-
-
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
         //滑动时，不往回弹，滑到哪就定位到哪
@@ -227,8 +224,6 @@ class LyricView : ScrollView {
     override fun performClick(): Boolean {
         return super.performClick()
     }
-
-
 
         var lastX = 0f
         var lastY = 0f

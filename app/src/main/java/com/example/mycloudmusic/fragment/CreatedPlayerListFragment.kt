@@ -66,7 +66,6 @@ class CreatedPlayerListFragment : BaseFragment(),RecyclerItemClickListener {
         startActivity(intent)
     }
 
-
     /**
      * 初始化RecycleView的操作
      * 添加PreLoad

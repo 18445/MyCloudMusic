@@ -142,8 +142,7 @@
                 app:tabRippleColor="#00000000" />
             <com.example.mycloudmusic.view.MyFrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vp2_home_bottom"
                     android:layout_width="match_parent"

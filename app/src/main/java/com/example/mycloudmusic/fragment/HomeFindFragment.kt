@@ -105,7 +105,7 @@ class HomeFindFragment : BaseFragment() {
     private val runnable: Runnable = object : Runnable {
         override fun run() {
             //获得轮播图当前的位置
-            var currentPosition: Int = mViewPager2.getCurrentItem()
+            var currentPosition: Int = mViewPager2.currentItem
             currentPosition++
             mViewPager2.setCurrentItem(currentPosition, true)
             mHandler.postDelayed(this, 5000)

@@ -37,7 +37,6 @@ class LoginActivity : BaseActivity() {
     private fun initClick(){
 
     }
-
     /**
      * 初始化TabLayout与Viewpager
      */
@@ -49,7 +48,6 @@ class LoginActivity : BaseActivity() {
     /**
      * ViewPager和TabLayout的绑定操作
      */
-
     private fun initPage(){
         mViewPager2.adapter = ViewPagerAdapter(supportFragmentManager,lifecycle,mList)
         TabLayoutMediator(mTabLayout,mViewPager2) { tab, position ->
@@ -60,5 +58,4 @@ class LoginActivity : BaseActivity() {
             }
         }.attach()
     }
-
 }

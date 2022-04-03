@@ -205,7 +205,7 @@ class LoginPhoneFragment : BaseFragment() {
                         Handler(Looper.myLooper()!!).postDelayed({
                             loginSuccess()
                         }
-                        ,1000)
+                        ,2500)
                     }
                 }else{
                     activity?.runOnUiThread {

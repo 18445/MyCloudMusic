@@ -1,8 +1,6 @@
 package com.example.mycloudmusic.viewmodel
-
 import androidx.lifecycle.ViewModel
 import com.example.mycloudmusic.userdata.*
-
 /**
  * 在主页面的ViewModel
  */
